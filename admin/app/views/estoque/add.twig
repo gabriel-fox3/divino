@@ -1,0 +1,62 @@
+<!-- Modal -->
+<div class="modal fade" id="modalAddCategoria" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Adicionar categoria</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-8">
+            <div class="form-group">
+              <label>Nome da categoria</label>
+              <input class="form-control" name="nome" required>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label>Icone da categoria</label>
+              <input type="hidden" name="icone">
+              <div class="dropdown">
+                <button class="btn btn-block btn-light btn-select-icon" type="button">
+                  Selecione
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch1">
+          <label class="custom-control-label" for="customSwitch1">Ativo</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Adicionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    
+    $('.btn-select-icon').iconpicker();
+
+    $('.btn-select-icon').on('iconpickerSelected', function(event){
+      $(this).html(`<i class="${event.iconpickerValue}"></i>`);
+      $('#modalAddCategoria').find('[name="icone"]').val(event.iconpickerValue);
+    });
+  });
+
+  $('#exampleModal').on('show.bs.modal', event => {
+    var button = $(event.relatedTarget);
+    var modal = $(this);
+    // Use above variables to manipulate the DOM
+    
+  });
+</script>

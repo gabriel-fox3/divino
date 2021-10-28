@@ -1,0 +1,67 @@
+:root {
+  --gap: 15px;
+}
+
+.holder-estoque {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.holder-estoque .item {
+  width: 250px;
+  height: 150px;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  border-radius: 5px;
+  margin-right: var(--gap);
+  margin-bottom: var(--gap);
+  color: var(--dark);
+  transition: .2s ease-in-out;
+}
+
+.holder-estoque .item:hover {
+  transform: scale(1.05);
+  text-decoration: none;
+}
+
+.holder-estoque .item.novo {
+  justify-content: center;
+}
+
+.holder-estoque .item.novo .head {
+  max-width: 100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.holder-estoque .item .head {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.holder-estoque .item .head i {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.holder-estoque .item .foot {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.holder-estoque .item .foot i {
+  font-size: 8px;
+}

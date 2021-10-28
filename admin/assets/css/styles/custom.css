@@ -1,6 +1,31 @@
+body[data-theme="dark"] .modal-content {
+  background-color: var(--dark);
+  color: var(--light);
+}
+
+body[data-theme="dark"] .modal-content .modal-header,
+body[data-theme="dark"] .modal-content .modal-footer {
+  border-color: #d9d9d9;
+}
+
+body[data-theme="dark"] .modal-content .modal-header * {
+  color: var(--light);  
+}
+
+
+
 
 #sidebar {
   z-index: 99;
+}
+
+#sidebar .img-logo {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  width: 95%;
+  height: 60px;
 }
 
 .filter-reverse {
@@ -29,39 +54,44 @@ table.dataTable>thead .sorting:after, table.dataTable>thead .sorting:before, tab
   border: 1px solid #eee;
 }
 
-.sidebar-nav .sidebar-item.disabled .sidebar-link {
+#sidebar .sidebar-nav .sidebar-item.disabled .sidebar-link {
   text-transform: uppercase;
   font-size: 12px;
 }
 
-.sidebar-nav .sidebar-item.disabled .sidebar-link:hover {
+#sidebar .sidebar-nav .sidebar-item.disabled .sidebar-link:hover {
   color: #a9acb3;
 }
 
-.sidebar-nav .sidebar-item {
+#sidebar .sidebar-nav .sidebar-item {
   margin-bottom: 15px;
 }
 
-.sidebar-nav .sidebar-link {
+#sidebar .sidebar-nav .sidebar-link {
   padding: 0;
   text-align: center; 
 }
 
-.sidebar-nav .sidebar-link > span:not(.sidebar-badge) {
+#sidebar .sidebar-nav .sidebar-link > span:not(.sidebar-badge) {
   display: block!important;
   text-transform: uppercase;
   font-size: 8px;
 }
 
-.sidebar-nav .sidebar-link i, 
-.sidebar-nav .sidebar-link svg {
+#sidebar .sidebar-nav .sidebar-link i, 
+#sidebar .sidebar-nav .sidebar-link svg {
   margin: 0!important
 }
 
-.sidebar-nav .sidebar-item .sidebar-dropdown .sidebar-item .sidebar-link {
+#sidebar .sidebar-nav .sidebar-item .sidebar-dropdown .sidebar-item .sidebar-link {
   text-align: left;
 }
 
-.sidebar-nav .sidebar-item .sidebar-dropdown .sidebar-item {
+#sidebar .sidebar-nav .sidebar-item .sidebar-dropdown .sidebar-item {
   margin-bottom: 0;
+}
+
+#sidebar .sidebar-nav > .sidebar-item > .sidebar-dropdown > .sidebar-item .sidebar-link {
+  padding: 0.5rem 1.5rem;
+  color: #a9acb3;
 }
