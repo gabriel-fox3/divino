@@ -35,12 +35,6 @@
     {% endif %}
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    {% if painel_info.cores is defined %}
-      document.documentElement.style.setProperty('--primaria', '{{ painel_info.cores[0] }}');
-      document.documentElement.style.setProperty('--secundaria', '{{ painel_info.cores[1] }}');
-    {% endif %}
-
   })
 
     

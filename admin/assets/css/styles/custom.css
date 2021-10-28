@@ -12,8 +12,16 @@ body[data-theme="dark"] .modal-content .modal-header * {
   color: var(--light);  
 }
 
+body[data-theme="dark"] .modal-content .form-control,
+body[data-theme="dark"] .modal-content .select2-container--bootstrap4 .select2-selection {
+  background-color: #d1d1d1;
+  border-color: #d1d1d1;
+  color: var(--light);
+}
 
-
+body[data-theme="dark"] .modal-content .custom-switch .custom-control-input:checked ~ .custom-control-label:after {
+  background-color: #d1d1d1;
+}
 
 #sidebar {
   z-index: 99;

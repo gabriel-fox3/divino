@@ -237,7 +237,11 @@
         default: 
           $image = imagecreatefromjpeg($source); 
       } 
-       
+      
+      if (!is_dir(dirname($destination))) {
+        mkdir(dirname($destination));
+      }
+
       // Save image 
       switch($mime){ 
         case 'image/jpeg': 

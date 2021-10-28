@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <!-- Modal -->
+  <div class="modal fade" id="modalEditProduto" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form method="post" action="{{ action_edit_produto }}" enctype="multipart/form-data">
+          <input type="hidden" name="id" value="{{ produto.idproduto }}">
+          <div class="modal-header">
+              <h5 class="modal-title">Editar produto</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cancelar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label>Nome do produto *</label>
+                  <input class="form-control" name="nome" required value="{{ produto.nome }}">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label>Categoria</label>
+                  <select class="form-control" name="categoria[]" multiple >
+                    {% if categorias is defined and categorias|length > 0 %}
+                      {% for cat in categorias %}
+                        <option {{ cat.idcategoria_produto in produto.categorias ? 'selected' : '' }} value="{{ cat.idcategoria_produto }}">{{ cat.nome }}</option>
+                      {% endfor %}
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Unidade de medida *</label>
+              <select class="form-control" name="medida" required>
+                <option {{ produto.medida == 'Unidade' ? 'selected' : '' }} data-un="Un" value="Unidade">Unidade</option>
+                <option {{ produto.medida == 'Litros' ? 'selected' : '' }} data-un="L" value="Litros">Litros</option>
+                <option {{ produto.medida == 'Quilos' ? 'selected' : '' }} data-un="Kg" value="Quilos">Quilos</option>
+              </select>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                <label>Quantidade ideal</label>
+                <div class="input-group">
+                  <input type="text" name="qnt_ideal" class="form-control" value="{{ produto.qnt_ideal }}">
+                  <div class="input-group-append">
+                    <span class="input-group-text text-un"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <label>Quantidade atual *</label>
+                <div class="input-group">
+                  <input type="text" name="qnt_atual" class="form-control" required value="{{ produto.qnt_atual }}">
+                  <div class="input-group-append">
+                    <span class="input-group-text text-un"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+              <div class="col my-auto text-center">
+                <p class="m-0">Selecionar imagem</p>
+                <input type="file" name="imagem" class="d-none">
+                <a href="javascript:;" class="btn-imagem btn btn-info btn-sm btn-pill px-3">Enviar arquivo</a>
+              </div>
+              <div class="col">
+                <img src="{{ produto.imagem }}" class="img-preview img-fluid">
+              </div>
+            </div>
+    
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="ativo" {{ produto.ativo == 1 ? 'checked' : '' }} id="ativo_produto_edit" value="1">
+              <label class="custom-control-label" for="ativo_produto_edit">Ativo</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Alterar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    $(document).ready(function () {
+  
+      $('[name="categoria[]"]').select2({
+        placeholder: "Selecione"
+      });
+  
+      $('[name="medida"]').change(function () {
+        let selected = $(this).find('option:selected');
+        $('.text-un').text(($(selected).attr('data-un')));
+      });
+
+      $('[name="medida"]').trigger('change');
+  
+      $('.btn-imagem').click(function () {
+        let i = $('[name="imagem"]');
+        i.click();
+  
+        i.change(function () {
+          let f = $(this).prop('files');
+          f = f[0];
+          $('.img-preview').attr('src', URL.createObjectURL(f))
+        })
+      })
+    
+    });
+  </script>
+</div>

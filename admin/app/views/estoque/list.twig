@@ -3,128 +3,191 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h3>Gerenciar estoque</h3>
+        <h3 class="text-center">Gerenciar estoque</h3>
         
-        <div class="holder-estoque">
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
+        {% if not categoria is defined %}
+          <div class="holder-estoque mt-4">
+            {% if categorias is defined and categorias|length > 0 %}
+              {% for categoria in categorias %}
+                <a class="item" href="{{ categoria.link }}">
+                  <div class="options">
+                    <div class="dropdown">
+                      <button class="btn btn-link text-dark" type="button" data-toggle="dropdown">
+                          <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="triggerId">
+                        <button class="dropdown-item edit" data-id="{{ categoria.idcategoria_produto }}" href="javascript:;">Editar</button>
+                        <button class="dropdown-item delete" data-id="{{ categoria.idcategoria_produto }}" href="javascript:;">Excluir</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="head">
+                    <i class="{{ categoria.icone }}"></i>
+                    <span>{{ categoria.nome }}</span>
+                  </div>
+                  <div class="foot">
+                    {{ categoria.produtos|length }} produtos
+                    <div>
+                      <i class="fas fa-circle text-{{ categoria.ativo == 1 ? 'success' : 'danger' }} pr-2"></i> {{ categoria.ativo == 1 ? 'Ativo' : 'Inativo' }}
+                    </div>
+                  </div>
+                </a>
+              {% endfor %}
+            {% endif %}
+            <a href="#modalAddCategoria" data-toggle="modal" class="item novo">
+              <div class="head">
+                <i class="fas fa-plus"></i>
+                <span>Adicionar categoria</span>
+              </div>
+            </a>
+          </div>
+        {% else %}
+          {% if categoria is defined %}
+            <div class="view-categoria mt-4">
+              <div class="head">
+                <a href="{{ back }}" class="back">
+                  <i class="fas fa-chevron-left"></i>
+                </a>
+                <div class="info">
+                  <h4>{{ categoria.nome }}</h4>
+                  {% if categoria.icone != '' %}
+                    <i class="{{ categoria.icone }}"></i>
+                  {% endif %} 
+                </div>
+              </div>
+              <div class="produtos">
+                {% if produtos is defined and produtos|length > 0 %}
+                  {% for produto in produtos %}
+                    <a class="item" href="javascript:;">
+                      <div class="options">
+                        <div class="dropdown">
+                          <button class="btn btn-link text-dark" type="button" data-toggle="dropdown">
+                              <i class="fas fa-ellipsis-v"></i>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="triggerId">
+                            <button class="dropdown-item edit" data-id="{{ produto.idproduto }}" href="javascript:;">Editar</button>
+                            <button class="dropdown-item delete" data-id="{{ produto.idproduto }}" href="javascript:;">Excluir</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="head">
+                        <div class="img" style="background-image: url('{{ produto.imagem }}')"></div>
+                        <span>{{ produto.nome }}</span>
+                      </div>
+                      <div class="foot">
+                        {{ produto.qnt_atual ~ ' ' ~ produto.medida}}
+                        <div>
+                          <i class="fas fa-circle text-{{ produto.ativo == 1 ? 'success' : 'danger' }} pr-2"></i> {{ produto.ativo == 1 ? 'Ativo' : 'Inativo' }}
+                        </div>
+                      </div>
+                    </a>
+                  {% endfor %}
+                {% endif %}
+
+                <a href="#modalAddProduto" data-toggle="modal" class="item novo">
+                  <div class="head">
+                    <i class="fas fa-plus"></i>
+                    <span>Adicionar Produto</span>
+                  </div>
+                </a>
               </div>
             </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="javascript:;" class="item">
-            <div class="head">
-              <i class="fas fa-wine-bottle"></i>
-              <span>Bebidas</span>
-            </div>
-            <div class="foot">
-              x produtos
-              <div>
-                <i class="fas fa-circle text-success pr-2"></i> Ativo
-              </div>
-            </div>
-          </a>
-          <a href="#modalAddCategoria" data-toggle="modal" class="item novo">
-            <div class="head">
-              <i class="fas fa-plus"></i>
-              <span>Adicionar categoria</span>
-            </div>
-          </a>
-        </div>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
 
-{{ add }}
+{{ modal_add_categoria }}
+{{ modal_add_produto }}
+
+<script>
+
+  $(document).ready(function () {
+    $('.holder-estoque .item .dropdown-menu .edit').click(function () {
+      let id = $(this).attr('data-id');
+      $.get('{{ url_edit_categoria }}', {
+        id
+      }, function (res) {
+        let e = $(res.result).appendTo('#painel .main');
+        $(e).find('#modalEditCategoria').modal('show');
+
+        $(e).find('#modalEditCategoria').on('hidden.bs.modal', function () {
+          e.remove();
+        })
+      })
+    });
+
+    $('.holder-estoque .item .dropdown-menu .delete').click(function () {
+      let id = $(this).attr('data-id');
+      Swal.fire({ 
+        title: 'Excluir categoria', 
+        icon: 'question', 
+        text: 'Você tem certeza que deseja excluir esta categoria?', 
+        showCancelButton: true, 
+        confirmButtonText: `Sim`, 
+        cancelButtonText: `Cancelar`, 
+      }).then((result) => { 
+        if (result.isConfirmed) { 
+          $.post('{{ url_excluir_categoria }}', {
+            id
+          }, function (res) {
+            if (res.error == false) {
+              location.reload();
+            } else {
+              Swal.fire(res.msg.type, res.msg.title, res.msg.title);
+            }
+          })
+        } 
+      }); 
+      
+    });
+    
+    $('.item .dropdown-menu .dropdown-item').click(function (e) {
+      e.preventDefault();
+    })
+
+    // produtos 
+    $('.view-categoria .produtos .item .options .edit').click(function () {
+      let id = $(this).attr('data-id');
+      $.get('{{ url_edit_produto }}', {
+        id
+      }, function (res) {
+        let e = $(res.result).appendTo('#painel .main');
+        $(e).find('#modalEditProduto').modal('show');
+
+        $(e).find('#modalEditProduto').on('hidden.bs.modal', function () {
+          e.remove();
+        })
+      })
+    });
+
+    $('.view-categoria .produtos .item .options .delete').click(function () {
+      let id = $(this).attr('data-id');
+      Swal.fire({ 
+        title: 'Excluir produto', 
+        icon: 'question', 
+        text: 'Você tem certeza que deseja excluir este produto?', 
+        showCancelButton: true, 
+        confirmButtonText: `Sim`, 
+        cancelButtonText: `Cancelar`, 
+      }).then((result) => { 
+        if (result.isConfirmed) { 
+          $.post('{{ url_excluir_produto }}', {
+            id
+          }, function (res) {
+            if (res.error == false) {
+              location.reload();
+            } else {
+              Swal.fire(res.msg.type, res.msg.title, res.msg.title);
+            }
+          })
+        } 
+      }); 
+      
+    });
+  })
+
+</script>
 
 {{ footer }}

@@ -30,4 +30,4 @@ define('DB_HOST', "189.126.106.70");
 define('DB_PORT', "3306");
 define('DB_USER', "fox3");
 define('DB_PASSWORD', "f0x1990");
-define('DB_NAME', "multibio-mvc");
+define('DB_NAME', "divino");

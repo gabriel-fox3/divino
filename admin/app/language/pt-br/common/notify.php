@@ -1,85 +1,38 @@
 <?php
 
 // GERAL
-$_['novo_departamento'] = array(
+$_['add_categoria'] = array(
   'type' => 'success',
-  'text' => 'Departamento criado com sucesso',
-  'title' => 'Criar departamento'
+  'text' => 'Categoria de produtos criada com sucesso',
+  'title' => 'Criar categoria'
 );
-$_['editar_departamento'] = array(
+
+$_['edit_categoria'] = array(
   'type' => 'success',
-  'text' => 'Departamento alterado com sucesso',
-  'title' => 'Alterar departamento'
+  'text' => 'Categoria de produtos alterada com sucesso',
+  'title' => 'Alterar categoria'
 );
-$_['novo_produto'] = array(
+
+$_['delete_categoria'] = array(
+  'type' => 'success',
+  'text' => 'Categoria de produtos excluída com sucesso',
+  'title' => 'Excluir categoria'
+);
+
+$_['add_produto'] = array(
   'type' => 'success',
   'text' => 'Produto criado com sucesso',
   'title' => 'Criar produto'
 );
-$_['editar_produto'] = array(
+
+$_['edit_produto'] = array(
   'type' => 'success',
   'text' => 'Produto alterado com sucesso',
   'title' => 'Alterar produto'
 );
-$_['nova_pagina'] = array(
-  'type' => 'success',
-  'text' => 'Página criada com sucesso',
-  'title' => 'Criar página'
-);
-$_['editar_pagina'] = array(
-  'type' => 'success',
-  'text' => 'Página alterada com sucesso',
-  'title' => 'Editar página'
-);
-$_['upload_arquivo_pagina'] = array(
-  'type' => 'success',
-  'text' => 'Arquivo enviado com sucesso',
-  'title' => 'Enviar arquivo da página'
-);
-$_['error_upload_arquivo_pagina'] = array(
-  'type' => 'error',
-  'text' => 'Erro ao enviar arquivo',
-  'title' => 'Enviar arquivo da página'
-);
-$_['remover_arquivo_pagina'] = array(
-  'type' => 'success',
-  'text' => 'Arquivo excluído com sucesso',
-  'title' => 'Excluir arquivo da página'
-);
-$_['remover_arquivo_departamento'] = array(
-  'type' => 'success',
-  'text' => 'Arquivo excluído com sucesso',
-  'title' => 'Excluir arquivo de departamento'
-);
-$_['edit_config'] = array(
-  'type' => 'success',
-  'text' => 'Configurações alteradas com sucesso',
-  'title' => 'Ajustar configurações'
-);
-$_['alterar_solicitacao'] = array(
-  'type' => 'success',
-  'text' => 'Solicitação alterada com sucesso',
-  'title' => 'Alterar solicitação'
-);
-$_['settings_usuario_add'] = array(
-  'type' => 'success',
-  'text' => 'Usuário adicionado com sucesso',
-  'title' => 'Adicionar usuário'
-);
-$_['settings_usuario_edit'] = array(
-  'type' => 'success',
-  'text' => 'Usuário alterado com sucesso',
-  'title' => 'Alterar usuário'
-);
-$_['settings_usuario_desativar'] = array(
-  'type' => 'success',
-  'text' => 'Usuário alterado para %s',
-  'title' => 'Alterar usuário'
-);
-$_['nova_noticia'] = array(
-  'type' => 'success',
-  'text' => 'Notícia criada com sucesso',
-  'title' => 'Criar notícia'
-);
 
-?>
+$_['delete_produto'] = array(
+  'type' => 'success',
+  'text' => 'Produto excluído com sucesso',
+  'title' => 'Excluir produto'
+);
