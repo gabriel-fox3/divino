@@ -1,0 +1,104 @@
+{{ header }}
+
+{% if produto is defined %}
+  <div class="container-fluid produtos-header" style="background-image: url(assets/img/produtos/produtos-bg.jpg);">
+    {{ produto.produto.nome }}
+  </div>
+
+  {% if produto.blocos.topo is defined %}
+    <div class="container-fluid prods-info">
+      {{ produto.blocos.topo.conteudo }}
+      {# <div class="row">
+        <div class="col-12 col-md-4 ml-auto py-5 my-auto">
+          <h4>Quintix® e Secura®<br>
+            Balanças Standard para
+            laboratório: </h4>
+            <p>Para resultados de pesagem mais rápidos e confiáveis</p>
+        </div>
+        <div class="col-12 col-md-6 img" style="background-image: url(assets/img/produtos/balanca_1.jpg);">
+        </div>
+      </div> #}
+    </div>
+  {% endif %}
+
+  {% if produto.blocos.especialista is defined %}
+    <div class="container py-5">
+      <div class="row">
+        {% if produto.blocos.especialista.conteudo != '' %}
+          <div class="col-12 text-center pb-4">
+            {{ produto.blocos.especialista.conteudo }}
+          </div>
+        {% endif %}
+        {% if produto.blocos.especialista.arquivos.img_especialista is defined %}
+          <div class="col-12 text-center pb-4">
+            <img src="{{ produto.blocos.especialista.arquivos.img_especialista.arquivo|get_upload_link() }}" alt="Produto" class="img-fluid">
+          </div>
+        {% endif %}
+        <div class="col-10 col-md-4 col-lg-3 mx-auto">
+          <a href="index.php?route=sobre/orcamento" class="btn btn-especialista">Falar com especialista</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if produto.blocos.text is defined %}
+    <div class="container-fluid prod-text py-5">
+      <div class="container">
+        {{ produto.blocos.text.conteudo }}
+        {# <div class="row">
+          <div class="col-12 col-md-3 my-auto pb-4 pb-md-0">
+            <h3>Fluxos de trabalho 
+              mais eficientes
+              com Quintix®
+              e <span>Secura</span>®</h3>
+          </div>
+          <div class="col-12 col-md-9">
+            <h5 class="mb-0 text-bold">...Operações intuitivas:</h5>
+            <p>A função Start Assistant e o terminal SmartTouch irá permitir a você operar a balança imediatamente e se sentir à vontade com todas as funções disponíveis. Tanto o projeto operacional conveniente, a estrutura do menu de fácil compreensão e o design ergonômico da balança foi vencedor de vários prêmios. Esses recursos irão ajudar a acelerar significativamente os procedimentos de trabalho desde o início tendo como resposta resultados livres de erros.</p>
+
+            <h5 class="mb-0 text-bold">... utilizando aplicativos integradas:</h5>
+            <p>Os aplicativos padrão permitem estender instantaneamente as opções de uso da balança, transformando tarefas de laboratório especiais, muitas vezes complicadas, em uma parte simples de sua rotina. Estes aplicativos são configurados para utilização intuitiva, guiando-o por meio de passos simples ao longo de cada etapa do procedimento de trabalho. Isto poupa o seu tempo e aumenta a confiabilidade de seus resultados.</p>
+
+            <h5 class="mb-0 text-bold">... produzidas para entregar os melhores resultados:</h5>
+            <p>Transfira, avalie, processe ou salve e documente resultados de pesagem em perfeita conformidade com os requisitos legais - apenas usando a tecnologia Plug & Play, sem necessidade de qualquer software adicional ou configurações complicadas. Desta forma, você pode incrementar o potencial de seu laboratório e guardar seus dados de forma confiável. Como resultado, você terá mais tempo para seus procedimentos analíticos novos, intrigantes, com resultados garantidos.</p>
+          </div>
+        </div> #}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if produto.blocos.video is defined %}
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-12 col-md-8 mx-auto">
+          {# <a href="#" class="video" style="background-image: url(assets/img/produtos/video.jpg);">
+            <i class="fas fa-play-circle"></i>
+          </a> #}
+          {{ produto.blocos.video.conteudo }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if produto.blocos.info is defined %}
+    {% if produto.blocos.catalogo is defined %}
+      <div class="container-fluid prods-info">
+        <div class="row">
+          <div class="col-12 col-md-4 py-4 my-auto ml-auto {{ produto.blocos.catalogo.arquivos.img_catalogo is defined ? '' : 'mr-auto' }}">
+            {{ produto.blocos.catalogo.conteudo }}
+            {% set info = produto.blocos.info.conteudo|json_decode(true) %}
+            <a href="{{ info.catalogo }}" download="{{ produto.produto.nome }}.pdf" class="btn btn-catalogo mt-4">Baixar Catálogo <i class="fas fa-download ml-4"></i></a>
+          </div>
+          {% if produto.blocos.catalogo.arquivos.img_catalogo is defined %}
+            <div class="col-12 col-md-6 img" style="background-image: url('{{ produto.blocos.catalogo.arquivos.img_catalogo.arquivo|get_upload_link() }}');"></div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+  
+{% endif %}
+
+
+
+{{ footer }}

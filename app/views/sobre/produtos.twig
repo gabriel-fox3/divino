@@ -1,0 +1,98 @@
+{{ header }}
+
+<div class="container-fluid produtos-header" style="background-image: url(assets/img/produtos/produtos-bg.jpg);">
+  Produtos
+</div>
+
+
+{% if departamentos is defined %}
+  <div class="accordion" id="accordionprodutos" >
+    <div class="container-fluid categories" id="produtos-list">
+      <div class="container">
+        <div id="categories">
+          <div class="row">
+            <div class="col-12">
+              <ul class="list-unstyled list-tipos">
+                {% for departamento in departamentos %}
+                  <li>
+                    <a class="btn btn-link {{ selected_d != null and selected_d == departamento.iddepartamento ? '' : 'collapsed' }}" data-toggle="collapse" data-target="#collapse_departamento_{{ departamento.iddepartamento }}" aria-expanded="{{ selected_d != null and selected_d == departamento.iddepartamento ? 'true' : 'false' }}" aria-controls="collapse_departamento_{{ departamento.iddepartamento }}">
+                      {{ departamento.nome }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {# <div class="row">
+            <div class="col-12 col-md-3 py-3 mx-auto">
+              <div id="collapseOne_one" class="collapse" aria-labelledby="headingOne">
+                <a class="btn card btn-card" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <div class="card-body" style="background-image: url(assets/img/produtos/AriumMini.png);">
+    
+                  </div>
+                  <div class="card-footer">
+                    Produto
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div> #}
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid collapseLista">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            {% for departamento in departamentos %}
+              <div id="collapse_departamento_{{ departamento.iddepartamento }}" class="collapse {{ selected_d != null and selected_d == departamento.iddepartamento ? 'show' : '' }} produtos" data-parent="#accordionprodutos">
+                <h3 class="text-center mt-4">{{ departamento.nome }}</h3>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        {% for produto in departamento.produtos %}
+                          <div class="row no-gutters">
+                            <div class="col-md-3 my-auto">
+                              <h4>{{ produto.produto.nome }}</h4>
+                              {% if produto.imagens is defined and produto.imagens|length > 0 %}
+                                <img src="{{ produto.imagens[0].arquivo|get_upload_link() }}" class="card-img">
+                              {% endif %}
+                            </div>
+                            <div class="col-md-9 my-auto">
+                              <div class="card-body">
+                                {{ produto.blocos.descricao.conteudo }}
+                                <div class="row">
+                                  <div class="col-12 col-md-4 p-3 p-md-1 mt-3">
+                                    <a href="index.php?route=sobre/produtos/view&id={{ produto.produto.idproduto }}" class="btn btn-contato">Ver mais</a>
+                                  </div>
+                                  {% if produto.blocos.info is defined and produto.blocos.catalogo is defined %}
+                                    {% set info = produto.blocos.info.conteudo|json_decode(true) %} 
+                                    <div class="col-12 col-md-4 mx-auto p-3 p-md-1 mt-3">    
+                                      <a href="{{ info['catalogo'] }}" download="Catálogo {{ produto.produto.nome }}.pdf" class="btn btn-catalogo">Baixar catálogo<i class="fas fa-download ml-4"></i></a>
+                                    </div>
+                                  {% endif %}
+                                  <div class="col-12 col-md-4 {{ info is defined ? 'mx-auto' : 'ml-auto' }} p-3 p-md-1 mt-3">
+                                    <a href="index.php?route=sobre/orcamento" class="btn btn-catalogo">Entrar em contato</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+{{ footer }}
+

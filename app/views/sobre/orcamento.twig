@@ -1,0 +1,121 @@
+{{ header }}
+
+<div class="container-fluid header-quemsomos" style="background-image: url(assets/img/sobre/quem_somos_bg.jpg);">
+  <div class="container">
+    <div class="row" style="min-height: 250px;">
+      <div class="col-12 text-center my-auto">
+        <h2>Orçamento</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container orcamento py-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="titulo-bg">
+        Orçamento
+      </div>
+      <h3>Faça sua cotação</h3>
+      <h2>Preencha seus dados abaixo</h2>
+      <p class="text-center">Estamos prontos para atendê-lo(a)</p>
+    </div>
+  </div>
+
+  {% if success is defined or error is defined %}
+    <div class="row">
+      <div class="col-8 mx-auto mb-3">
+        {% if success is defined %}
+          <div class="alert-custom alert alert-success">
+            <div class="alert-icon"><i class="fas fa-check"></i></div>
+            {{ success }}
+          </div>
+        {% endif %}
+      
+        {% if error is defined %}
+          <div class="alert-custom alert alert-danger">
+            <div class="alert-icon"><i class="fas fa-times"></i></div>
+            {{ error }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row formulario">
+    <div class="col-12">
+      <h4><span>01</span> Dados da Empresa</h4>
+      <form method="post">
+        <div class="form-row">
+          <div class="col mt-auto mb-0">
+            <label for=""><span>*</span>Nome do responsável:</label>
+            <input type="text" class="form-control" name="nome_do_responsavel" required>
+          </div>
+          <div class="col mt-auto mb-0">
+            <label for=""><span>*</span>Endereço de e-mail:</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="col mt-auto mb-0">
+            <label for=""><span>*</span>Telefone:</label>
+            <input type="tel" class="form-control" name="telefone" required>
+          </div>
+          {% if representadas is defined %}
+            <div class="form-group col mt-auto mb-0">
+              <label for="">Deseja adquirir produtos de qual Representada:</label>
+              <select class="form-control" name="representada">
+                {% for pagina in representadas.sub %}
+                  <option value="{{ pagina.idpagina }}">{{ pagina.nome }}</option>
+                {% endfor %}
+                <option>Todas</option>
+              </select>
+            </div>
+          {% endif %}
+        </div>
+        <div class="form-row mt-3">
+          <div class="col mt-auto mb-0">
+            <label for="">Qual o nome da empresa/negócio?</label>
+            <input type="text" class="form-control" name="nome_da_empresa">
+          </div>
+          <div class="form-group col mt-auto mb-0">
+            <label for=""><span>*</span>Tipo de Pessoa:</label>
+            <select class="form-control" name="tipo_de_pessoa" required>
+              <option value="Física">Física</option>
+              <option value="Jurídica">Jurídica</option>
+            </select>
+          </div>
+          <div class="col mt-auto">
+            <label for="">CNPJ da Empresa:</label>
+            <input type="text" class="form-control" name="cnpj_da_empresa">
+          </div>
+        </div>
+        <div class="form-row mt-3">
+          <div class="col">
+            <label for="textarea"><span>*</span>Liste quais os produtos você deseja que entraremos em contato.</label>
+            <textarea name="mensagem" rows="5" class="form-control" required></textarea>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+          <div class="g-recaptcha" data-sitekey="6LfPgbYcAAAAADrN-z7fduMmUoJ1HHMPJGMyTNVT"></div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-10 col-md-4 mx-auto">
+            <button type="submit" class="btn btn-form">Tudo certo</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{{ footer }}
+
+{% if success is defined or error is defined %}
+  <script>
+    $(document).ready(function () {
+      $([document.documentElement, document.body]).animate({
+          scrollTop: $("#form-contato").offset().top
+      }, 500);
+    })
+  </script>
+{% endif %}

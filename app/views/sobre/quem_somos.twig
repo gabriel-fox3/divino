@@ -1,0 +1,41 @@
+{{ header }}
+
+<div class="container-fluid header-quemsomos" style="background-image: url(assets/img/sobre/quem_somos_bg.jpg);">
+  <div class="container">
+    <div class="row" style="min-height: 250px;">
+      <div class="col-12 text-center my-auto">
+        <h2>A Empresa</h2>
+      </div>
+    </div>
+  </div>
+</div>
+{% if pagina is defined %}
+  {{ pagina.blocos.conteudo.conteudo }}
+{% endif %}
+{# <div class="container-fluid primeiro-lugar" style="background-image: url(assets/img/sobre/empresa-bg.jpg);">
+  <div class="row">
+    <div class="col-12 col-md-4 col-xl-6"></div>
+    <div class="col-12 col-md-8 col-xl-6 circle animate__animated animate__lightSpeedInRight">
+      <div>
+        <h5 class="mb-4">prezamos o atendimento em</h5>
+        <h1>primeiro <br>lugar</h1>
+  
+        <p class="mb-0 mt-4">Garantimos sua satisfação!!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 py-5">
+      <p>A Multibio é uma empresa direcionada para o atendimento de clientes que buscam soluções inovadoras.</p>
+
+      <p>Composta por uma equipe capacitada e com experiência de mercado, a Multibio disponibiliza assessoria aos seus clientes para a compra do produto ideal as suas necessidades.</p>
+        
+      <p>Representando grandes marcas, a Multibio fornece equipamentos e consumíveis para empresas de diversos segmentos como, indústrias farmacêuticas, biotecnologia, veterinária, diagnóstico e alimentos; mineração, siderurgia e automobilística; saneamento e meio ambiente; universidades e centros de pesquisas.</p>
+    </div>
+  </div>
+</div> #}
+
+{{ footer }}

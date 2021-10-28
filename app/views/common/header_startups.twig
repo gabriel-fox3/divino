@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{{ assets }}node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+  <!-- PERFECT SCROLLBAR -->
+  <link rel="stylesheet" href="{{ assets }}node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
+
+  <!-- FANCYBOX -->
+  <link rel="stylesheet" href="{{ assets }}css/jquery.fancybox.min.css">
+
+  <!-- ADOBE FONTS -->
+  <link rel="stylesheet" href="https://use.typekit.net/ote8boj.css">
+
+  <!-- ANIMATE -->
+  <link rel="stylesheet" href="{{ assets }}css/animate.min.css">
+  <link rel="stylesheet" href="{{ assets }}css/animations.css">
+
+  <link rel="stylesheet" href="{{ assets }}webfonts/Fontawesome/fontawesome.css">
+
+  <link rel="stylesheet" href="{{ assets }}node_modules/nouislider/distribute/nouislider.css" >
+  <link rel="stylesheet" href="{{ assets }}css/style.css">
+  <link rel="stylesheet" href="{{ assets }}css/hover.css">
+  <link rel="stylesheet" href="{{ assets }}css/app.css">
+
+  <title>Base27</title>
+
+  {% if custom_styles is defined %}
+    {% for style in custom_styles %}
+      <link rel="stylesheet" href="{{ assets }}css/{{ style }}.css">
+    {% endfor %}
+  {% endif %}
+
+  {% if custom_scripts is defined %}
+    {% for script in custom_scripts %}
+      <script src="{{ assets }}js/{{ script }}.js"></script>
+    {% endfor %}
+  {% endif %}
+</head>
+<body>
+
+  <header>
+    <div class="container-fluid" id="header_startups">
+      <div class="container">
+        <nav class="navbar">
+          <a class="navbar-brand" href="index.php"><img src="{{ assets }}img/header/logo-branco.png" alt="Base27"></a>
+          <div class="d-flex">
+            <div class="redes">
+              <a href="#" class="btn btn-redes-header" target="_blank"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="btn btn-redes-header" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"><i class="fas fa-bars" style="color: #fff;"></i></span>
+            </button>
+          </div>
+
+          <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ml-auto flex-md-row align-items-md-center justify-content-md-around">
+              <li class="nav-item active">
+                <a class="nav-link" href="?route=sobre/quem_somos">Quem somos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="?route=sobre/equipe">Equipe</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="?route=sobre/startups">Startups</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="?route=blog/noticias">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="?route=sobre/eventos">Eventos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="?route=sobre/contato">Contato</a>
+              </li>
+              <li class="nav-item destaque">
+                <a class="nav-link" href="?route=sobre/seja_membro">Seja membro</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>

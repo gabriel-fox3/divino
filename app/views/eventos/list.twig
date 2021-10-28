@@ -1,0 +1,154 @@
+{{ header }}
+
+<div class="container-fluid pb-5" id="eventos" style="margin-top: 105px">
+	<div class="row pb-5" id="exclusivos">
+		{% if eventos.exclusivos is defined %}
+			<div class="col-12 p-0 evento">
+				<div class="head">
+					<h2>Eventos exclusivos para
+						<span>membros</span>
+					</h2>
+				</div>
+        <div class="info">
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
+        </div>
+				<div class="content">
+					<div class="container">
+						<div class="row">
+							{% for count,evento in eventos.exclusivos %}
+								<div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0 mx-auto">
+									<div class="card {{ count == 1 ? ' ativo' : '' }}">
+										<div class="card-header">
+											<span>{{ evento.name }}</span>
+										</div>
+										<div class="card-body">
+											{# <div style="background-image: url({{ evento.img }}); {{ evento.image_url == null ? 'background-color: var(--rosa);' : '' }}"></div> #}
+											<div class="desc">
+												<h5>{{ evento.isOnline == 1 ? 'Evento on-line' : 'Evento presencial' }}</h5>
+												<p>{{ evento.descricao }}</p>
+											</div>
+											<ul class="mt-3 list-inline horario d-flex justify-content-center align-items-center">
+												<li class="list-inline-item">
+													<img src="{{ assets }}img/deadline.png">
+												</li>
+												<li class="list-inline-item">
+													<span>
+														<strong>{{ evento.data_ev }}</strong>
+														{{ evento.dia_ev }}</span>
+													<span>
+														<strong>{{ evento.initTime }}</strong>
+														às
+														<strong>{{ evento.endTime }}</strong>
+													</span>
+												</li>
+											</ul>
+										</div>
+										<div class="card-footer d-flex justify-content-center pb-4">
+											<a href="?route=sobre/eventos/view&id={{ evento.id }}" class="btn">Quero participar</a>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="row mt-5 pb-5 mb-5" id="abertos">
+		{% if eventos.abertos is defined %}
+			<div class="col-12 p-0 evento">
+				<div class="head">
+					<h2>Eventos 
+						<span>gratuitos</span>
+					</h2>
+				</div>
+        <div class="info">
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</p>
+        </div>
+				<div class="content">
+					<div class="container">
+						<div class="row">
+							{% for count,evento in eventos.abertos %}
+								<div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0 mx-auto">
+									<div class="card {{ count == 1 ? ' ativo' : '' }}">
+										<div class="card-header">
+											<span>{{ evento.name }}</span>
+										</div>
+										<div class="card-body">
+											{# <div style="background-image: url({{ evento.img }}); {{ evento.image_url == null ? 'background-color: var(--rosa);' : '' }}"></div> #}
+											<div class="desc">
+												<h5>{{ evento.isOnline == 1 ? 'Evento on-line' : 'Evento presencial' }}</h5>
+												<p>{{ evento.descricao }}</p>
+											</div>
+											<ul class="mt-3 list-inline horario d-flex justify-content-center align-items-center">
+												<li class="list-inline-item">
+													<img src="{{ assets }}img/deadline.png">
+												</li>
+												<li class="list-inline-item">
+													<span>
+														<strong>{{ evento.data_ev }}</strong>
+														{{ evento.dia_ev }}</span>
+													<span>
+														<strong>{{ evento.initTime }}</strong>
+														às
+														<strong>{{ evento.endTime }}</strong>
+													</span>
+												</li>
+											</ul>
+										</div>
+										<div class="card-footer d-flex justify-content-center pb-4">
+											<a href="?route=sobre/eventos/view&id={{ evento.id }}" class="btn">Quero participar</a>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+      </div>
+		{% endif %}
+	</div>
+</div>
+
+{{ footer }}
+
+
+<script>
+
+  $(document).ready(function () {
+
+    var app = Base;
+
+    var exclusivos = $('#exclusivos .container');
+    app.infinite_row(exclusivos, function(row, a) {
+      let i = $(row).find('.ativo');
+      let col = i.parent();
+      if ((a == 'next' && col.next().length) || (a == 'prev' && col.prev().length)) {
+        if (a == 'next') {
+          col.next().find('.card').addClass('ativo');
+        } else {
+          col.prev().find('.card').addClass('ativo');
+        }
+        i.removeClass('ativo');
+      }
+    }); 
+
+    var abertos = $('#abertos .container');
+    app.infinite_row(abertos, function(row, a) {
+      let i = $(row).find('.ativo');
+      let col = i.parent();
+      if ((a == 'next' && col.next().length) || (a == 'prev' && col.prev().length)) {
+        if (a == 'next') {
+          col.next().find('.card').addClass('ativo');
+        } else {
+          col.prev().find('.card').addClass('ativo');
+        }
+        i.removeClass('ativo');
+      }
+    }); 
+
+  });
+
+</script>

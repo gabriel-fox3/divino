@@ -1,0 +1,35 @@
+{{ header }}
+
+<div class="container-fluid blog-banner" style="background-image: url(assets/img/blog/banner-blog.jpg)">
+  <h1>Blog</h1>
+</div>
+
+{% if noticias is defined %}
+  <div class="container lista-blog py-5">
+    <div class="row">
+      {% for noticia in noticias %}    
+        <div class="col-12 col-md-4 mb-5">
+          <a href="index.php?route=blog/noticias/view&id={{ noticia.idnoticia }}" class="noticia">
+            <div class="img" style="background-image: url('{{ noticia.imagem }}')"></div>
+            <h5>{{ noticia.nome }}</h5>     
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    {# <div class="row">
+      <div class="col-12">
+        <nav class="">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link " href="#"><i class="fas fa-chevron-left"></i></a></li>
+            <li class="page-item"><a class="page-link active" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
+          </ul>
+        </nav>
+      </div>
+    </div> #}
+  </div>
+{% endif %}
+
+{{ footer }}

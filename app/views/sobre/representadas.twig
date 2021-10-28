@@ -1,0 +1,193 @@
+{{ header }}
+
+<div class="container-fluid header-quemsomos" style="background-image: url(assets/img/sobre/quem_somos_bg.jpg);">
+  <div class="container">
+    <div class="row" style="min-height: 250px;">
+      <div class="col-12 text-center my-auto">
+        <h2>Representadas</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="accordion py-5" id="accordionRepresentadas">
+  <div class="container-fluid categories">
+    <div class="container py-5">
+      <div id="categories">
+        <h1 class="">AS MAIORES EMPRESAS EM PRODUTOS LABORATORIAIS</h1>
+        <div class="row mt-4 justify-content-center">
+          {% if pagina is defined %}
+            {% for nome,pagina in pagina.sub %}
+              <div class="col-5 col-md-4 col-lg-3">
+                <a class="btn btn-collapse {{ selected_r != null and selected_r == pagina.idpagina ? '' : 'collapsed' }}" data-toggle="collapse" data-target="#collapse_{{ pagina.idpagina }}" aria-expanded="{{ selected_r != null and selected_r == pagina.idpagina ? 'true' : 'false' }}" aria-controls="collapse_{{ pagina.idpagina }}">
+                  {{ nome }}
+                </a>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid conteudo">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          {% if pagina is defined %}
+            {% for nome,pagina in pagina.sub %}
+              <div id="collapse_{{ pagina.idpagina }}" class="collapse {{ selected_r != null and selected_r == pagina.idpagina ? 'show' : '' }} py-5" data-parent="#accordionRepresentadas">
+                {{ pagina.blocos.descricao.conteudo }}
+                {# <h2>As melhores soluções tecnológicas</h2>
+                <p class="text-center">Instrumentos analíticos para avançar na descoberta, desenvolvimento e fabricação de medicamentos</p>
+                <div class="row">
+                  <div class="col-12 col-md-6 my-auto">
+                    <div class="accordion" id="accordionExample">
+                      <div class="card">
+                        <div class="card-header mx-3 mx-md-4" id="headingSolucoes">
+                          <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseSolucoes" aria-expanded="true" aria-controls="collapseSolucoes">
+                              Soluções inovadoras de espectrometria
+                            </button>
+                          </h2>
+                        </div>
+                    
+                        <div id="collapseSolucoes" class="collapse show" aria-labelledby="headingSolucoes" data-parent="#accordionExample">
+                          <div class="card-body">
+                            Descubra novas maneiras de aplicar a espectrometria de massa aos desafios analíticos mais prementes de hoje. Inovações como TIMS (Trapped Ion Mobility), lasers de raio inteligente e de varredura para imagens.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card">
+                        <div class="card-header mx-3 mx-md-4" id="headingRaiosX">
+                          <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseRaiosX" aria-expanded="false" aria-controls="collapseRaiosX">
+                              Difração de Raios-X e Análise Elementar
+                            </button>
+                          </h2>
+                        </div>
+                        <div id="collapseRaiosX" class="collapse" aria-labelledby="headingRaiosX" data-parent="#accordionExample">
+                          <div class="card-body">
+                            A Bruker projeta e fabrica instrumentação analítica para análise elementar, pesquisa de materiais, investigações estruturais e de superfície.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 py-2 my-auto">
+                    <h3 class="mb-4">MICROSCÓPIOS DE FLUORESCÊNCIA</h3>
+                    <p>O conjunto de sistemas de microscopia de fluorescência da Bruker fornece uma gama completa de soluções para pesquisadores de ciências da vida.</p>
+                  </div>
+                  <div class="col-12 col-md-6 py-2 my-auto">
+                    <h3 class="mb-4">RESSONÂNCIA MAGNÉTICA</h3>
+                    <p>A Bruker é líder de mercado em instrumentos de espectrocópia por ressonância magnética, incluindo RMN, EPR e ressonância magnética pré-clínica (MRI).</p>
+                  </div>
+                  <div class="col-12 col-md-6 imagens-hover">
+                    <div class="img first" style="background-image: url(assets/img/sobre/bucker-2.jpg);"></div>
+                    <div class="img second hover" style="background-image: url(assets/img/sobre/bucker-1.jpg);"></div>
+                  </div>
+                  <div class="col-12 py-4">
+                    <div class="cotacao">
+                      <div class="row">
+                        <div class="col-12 my-auto col-md-3 py-3 text-center text-md-left">
+                          <h5>Cotação</h5>
+                        </div>
+                        <div class="col-12 my-auto py-3 col-md-6 text-center">
+                          <h6>JÁ REALIZOU SUA COTAÇÃO? FAÇA AGORA MESMO SEU ORÇAMENTO</h6>
+                        </div>
+                        <div class="col-12 my-auto py-3 col-md-3 text-center text-md-right">
+                          <a href="index.php?route=sobre/orcamento" class="btn btn">Clique aqui</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> #}
+              </div>
+            {% endfor %}
+          {% endif %}
+          <div id="collapseSartorius" class="collapse py-5" data-parent="#accordionRepresentadas">
+            <h2>Bem-vindo a Sartorius</h2>
+            <p class="text-center">Um parceiro de confiança para a indústria biofarmacêutica e laboratórios</p>
+            <div class="row">
+              <div class="col-12 col-md-6 my-auto">
+                <div class="accordion" id="accordionSartorius">
+                  <div class="card">
+                    <div class="card-header mx-3 mx-md-4" id="headingSoluc">
+                      <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapaseSoluc" aria-expanded="true" aria-controls="collapaseSoluc">
+                          Biorreatores e Fermentadores
+                        </button>
+                      </h2>
+                    </div>
+                
+                    <div id="collapaseSoluc" class="collapse show" aria-labelledby="headingSoluc" data-parent="#accordionSartorius">
+                      <div class="card-body">
+                        A linha de biorreatores líder da indústria da Sartorius possui recursos automatizados de hardware e software que permitem aos usuários desenvolver protocolos operacionais consistentes e confiáveis ​​para todas as etapas
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header mx-3 mx-md-4" id="headingRaiosX">
+                      <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseRaiosX" aria-expanded="false" aria-controls="collapseRaiosX">
+                          Filtragem e Purificação
+                        </button>
+                      </h2>
+                    </div>
+                    <div id="collapseRaiosX" class="collapse" aria-labelledby="headingRaiosX" data-parent="#accordionSartorius">
+                      <div class="card-body">
+                        Especialização Líder e Tecnologias Exclusivas O extenso portfólio de filtragem e purificação da Sartorius ajuda você a superar seus principais desafios.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 py-2 my-auto">
+                <h3 class="mb-4">TECNOLOGIA & DESENVOLVIMENTO</h3>
+                <p>A Sartorius oferece sistemas de água de laboratório de ponta, projetados para atender e exceder seus padrões de qualidade.</p>
+              </div>
+              <div class="col-12 col-md-6 py-2 my-auto">
+                <h3 class="mb-4">ANÁLISE DE DADOS</h3>
+                <p>Analíticos e sensores para coleta de dados uni / multivariáveis: monitoramento e controle em tempo real.</p>
+              </div>
+              <div class="col-12 col-md-6 imagens-hover">
+                <div class="img first" style="background-image: url(assets/img/sobre/sartorius-2.jpg);"></div>
+                <div class="img second hover" style="background-image: url(assets/img/sobre/sartorius-1.jpg);"></div>
+              </div>
+              <div class="col-12 py-4">
+                <div class="cotacao">
+                  <div class="row">
+                    <div class="col-12 my-auto col-md-3 py-3 text-center text-md-left">
+                      <h5>Cotação</h5>
+                    </div>
+                    <div class="col-12 my-auto py-3 col-md-6 text-center">
+                      <h6>JÁ REALIZOU SUA COTAÇÃO? FAÇA AGORA MESMO SEU ORÇAMENTO</h6>
+                    </div>
+                    <div class="col-12 my-auto py-3 col-md-3 text-center text-md-right">
+                      <a href="index.php?route=sobre/orcamento" class="btn btn">Clique aqui</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ footer }}
+
+<script>
+  $('.imagens-hover').on( "mouseover", function(){
+    var $this = $(this);
+    $this.find('.second').removeClass('hover');
+    $this.find('.first').addClass('hover');
+  });
+
+  $('.imagens-hover').on( "mouseout", function(){
+    var $this = $(this);
+    $this.find('.first').removeClass('hover');
+    $this.find('.second').addClass('hover');
+  });
+</script>

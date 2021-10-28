@@ -1,0 +1,85 @@
+  {{ header }}
+
+  <div class="container-fluid blog-banner" style="background-image: url(assets/img/blog/banner-blog.jpg);">
+    <h1>Blog</h1>
+  </div>
+  
+  <div class="container noticia-interna py-5">
+    <div class="row">
+      <div class="col-12">
+        {% if noticia.banner != '' %}
+          <div class="img-destaque img" style="background-image: url('{{ noticia.banner }}');"></div>
+        {% endif %}
+      </div>
+      <div class="col-12 pt-3 pb-5">
+        <h2>{{ noticia.nome }}</h2>
+        <h6>{{ noticia.data }}</h6>
+      </div>
+      <div class="col-12">
+        {% if noticia.obj is defined and noticia.obj is iterable %}
+          {% for item in noticia.obj %}
+            
+            {% if item.type == 'text' %}
+              <p>{{ item.val }}</p>
+            {% endif %}
+            {% if item.type == 'image' %}
+            <div class="text-center mt-2 mb-3">
+              <img src="{{ item.val }}" class="img-fluid">
+            </div>
+            {% endif %}
+            {% if item.type == 'carousel' %}                
+              <div class="container py-5">
+                <div id="carouselNoticias_{{ item.id }}" class="carousel slide" data-ride="carousel">
+                  <div class="carousel-inner">
+                  
+                    
+                    {% set count = 0 %}
+                    {% for imagem in item.val %}
+                      <div class="carousel-item {{ count == 0 ? 'active' : '' }}">
+                        <div class="img" style="background-image: url('{{ imagem }}')"></div>
+                      </div>
+                      {% set count = count + 1 %}
+                    {% endfor %}
+
+                  </div>
+
+                  <a class="carousel-control-prev" href="#carouselNoticias_{{ item.id }}" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next" href="#carouselNoticias_{{ item.id }}" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+
+                  <ol class="carousel-indicators">
+                    {% set count = 0 %}
+                    {% for imagem in item.val %}
+                      <li data-target="#carouselNoticias_{{ item.id }}" style="background-image: url('{{ imagem }}')" data-slide-to="{{ count }}" class="{{ count == 0 ? 'active' : '' }}"></li>
+                      {% set count = count + 1 %}
+                    {% endfor %}
+
+                  </ol>
+                </div>
+              </div>
+            {% endif %}
+            {% if item.type == 'video' %}
+              <div class="container-fluid py-5">
+                <div class="container">
+                  <div class="w-75 mx-auto">
+                    <iframe width="100%" class="mx-auto" height="400" src="{{ item.val }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+              </div>
+            {% endif %}
+
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="col-10 col-md-5 col-lg-3 mx-auto mt-5">
+        <a href="index.php?route=blog/noticias" class="btn btn-voltar-blog">Voltar para Blog</a>
+      </div>
+    </div>
+  </div>
+
+  {{ footer }}
