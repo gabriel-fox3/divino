@@ -33,12 +33,12 @@ class ControllerBlogNoticias extends BaseController {
           if ($noticia['imagem'] !== '' && $noticia['imagem'] !== null) {
             $noticia['imagem'] = UPLOADS . 'noticias/' . $noticia['imagem'];
           } else {
-            $noticia['imagem'] = ASSETS . 'img/no_photo.png';
+            $noticia['imagem'] = DEFAULT_NO_PHOTO;
           }
           if ($noticia['banner'] !== '' && $noticia['banner'] !== null) {
             $noticia['banner'] = UPLOADS . 'noticias/' . $noticia['banner'];
           } else {
-            $noticia['banner'] = ASSETS . 'img/no_photo.png';
+            $noticia['banner'] = DEFAULT_NO_PHOTO;
           }
           $noticia['data'] = DateTime::createFromFormat('Y-m-d', $noticia['data'])->format('d.m.Y');
           $noticia['autores'] = html_entity_decode($noticia['autores']);
@@ -63,7 +63,7 @@ class ControllerBlogNoticias extends BaseController {
       if ($noticia['imagem'] !== '' && $noticia['imagem'] !== null) {
         $noticia['imagem'] = UPLOADS . 'noticias/' . $noticia['imagem'];
       } else {
-        $noticia['imagem'] = ASSETS . 'img/no_photo.png';
+        $noticia['imagem'] = DEFAULT_NO_PHOTO;
       }
       if ($noticia['banner'] !== '' && $noticia['banner'] !== null) {
         $noticia['banner'] = UPLOADS . 'noticias/' . $noticia['banner'];

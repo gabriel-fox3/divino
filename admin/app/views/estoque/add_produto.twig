@@ -34,9 +34,9 @@
           <div class="form-group">
             <label>Unidade de medida *</label>
             <select class="form-control" name="medida" required>
-              <option data-un="Un" value="Unidade">Unidade</option>
-              <option data-un="L" value="Litros">Litros</option>
-              <option data-un="Kg" value="Quilos">Quilos</option>
+              <option value="Unidade,Un">Unidades</option>
+              <option value="Litro,L">Litros</option>
+              <option value="Quilo,Kg">Quilos</option>
             </select>
           </div>
 
@@ -97,8 +97,9 @@
 
     $('[name="medida"]').change(function () {
       let selected = $(this).find('option:selected');
-      $('.text-un').text(($(selected).attr('data-un')));
-    })
+      let un = $(selected).attr('value').split(',');
+      $('.text-un').text(un[1]);
+    });
 
     $('.btn-imagem').click(function () {
       let i = $('[name="imagem"]');

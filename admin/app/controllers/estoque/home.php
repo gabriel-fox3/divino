@@ -37,6 +37,7 @@ class ControllerEstoqueHome extends BaseController {
     
     $data['modal_add_categoria'] = $this->load->view('estoque/add_categoria', $data);
     $data['modal_add_produto'] = $this->load->view('estoque/add_produto', $data);
+    $data['modal_movimentacao'] = $this->load->controller('estoque/movimentacao', $data);
     
     $data['sidebar'] = $this->load->controller('common/sidebar', $data);
     $data['navbar'] = $this->load->controller('common/navbar', $data);
@@ -64,7 +65,7 @@ class ControllerEstoqueHome extends BaseController {
     $produtos = $this->model_estoque_produto->getByIdcategoria_produto($idcategoria);
     if (sizeof($produtos) > 0) {
       foreach($produtos as $key => $val) {
-        $val['imagem'] = $val['imagem'] !== NULL ? UPLOADS . 'produtos/' . $val['imagem'] : (ASSETS . 'img/no_photo.png');
+        $val['imagem'] = $val['imagem'] !== NULL ? UPLOADS . 'produtos/' . $val['imagem'] : DEFAULT_NO_PHOTO;
         $produtos[$key] = $val;
         // $produtos[$key]['link'] = $this->url->link('estoque/home&idc=' . $val['idcategoria_produto']);
       }
@@ -193,7 +194,7 @@ class ControllerEstoqueHome extends BaseController {
       $data = array();
       $data['categorias'] = $this->getListCategorias();
       $data['produto'] = $this->model_estoque_produto->getById($this->request->get['id']);
-      $data['produto']['imagem'] = $data['produto']['imagem'] !== NULL ? UPLOADS . 'produtos/' . $data['produto']['imagem'] : ASSETS . 'img/no_photo.png';
+      $data['produto']['imagem'] = $data['produto']['imagem'] !== NULL ? UPLOADS . 'produtos/' . $data['produto']['imagem'] : DEFAULT_NO_PHOTO;
       $data['action_edit_produto'] = $this->url->link('estoque/home/edit_produto');
 
       $this->response->json(array('result' => $this->load->view('estoque/edit_produto', $data)));

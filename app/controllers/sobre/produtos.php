@@ -39,7 +39,7 @@ class ControllerSobreProdutos extends BaseController {
           if ($produto_imagem) {
             $departamentos[$key]['imagem'] = UPLOADS . $produto_imagem['arquivo'];
           } else {
-            $departamentos[$key]['imagem'] = ASSETS . 'img/no_photo.png';
+            $departamentos[$key]['imagem'] = DEFAULT_NO_PHOTO;
           }
         } else {
           $imagens = json_decode($departamento['imagem'], true);

@@ -12415,8 +12415,8 @@ body[data-sidebar-behavior="compact"] .sidebar-dropdown.collapsing {
   height: auto;
 }
 body[data-sidebar-behavior="compact"] .sidebar {
-  min-width: 68px;
-  max-width: 68px;
+  min-width: 110px;
+  max-width: 110px;
   z-index: 1;
 }
 body[data-sidebar-behavior="compact"] .sidebar-item {

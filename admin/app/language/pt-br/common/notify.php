@@ -36,3 +36,9 @@ $_['delete_produto'] = array(
   'text' => 'Produto excluído com sucesso',
   'title' => 'Excluir produto'
 );
+
+$_['add_movimentacao'] = array(
+  'type' => 'success',
+  'text' => 'Movimentação lançada com sucesso',
+  'title' => 'Lançar movimentação'
+);

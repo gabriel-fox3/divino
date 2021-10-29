@@ -1,0 +1,159 @@
+<div class="container-fluid">  
+  <!-- Modal -->
+  <div class="modal fade" id="modalMovimentacao" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form method="post" id="form_movimentacao" action="{{ action_movimentacao }}">
+          <div class="modal-header">
+            <h5 class="modal-title">Lançar <span></span></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <div class="custom-controls-stacked d-flex justify-content-center">
+              <label class="custom-control custom-radio mr-4">
+                <input name="lancar" value="entrada" type="radio" class="custom-control-input">
+                <span class="custom-control-label">Entrada</span>
+              </label>
+              <label class="custom-control custom-radio">
+                <input name="lancar" value="saida" type="radio" class="custom-control-input">
+                <span class="custom-control-label">Saída</span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Descrição</label>
+              <textarea class="form-control" rows="4" name="descricao"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Produtos *</label>
+              <select class="form-control" name="produtos[]" multiple required>
+                {% if categorias_produtos is defined %}
+                  {% for categoria in categorias_produtos %}
+                    {% if categoria.produtos|length > 0 %}
+                      <optgroup label="{{ categoria.nome }}">
+                        {% for produto in categoria.produtos %}
+                          <option value="{{ produto.idproduto }}" data-medida="{{ produto.medida }}">{{ produto.nome }}</option>
+                        {% endfor %}
+                      </optgroup>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </select>
+            </div>
+            <div class="tab" style="display: none;" id="tab_produtos_movimentacao">
+              <ul class="nav nav-tabs" role="tablist">
+              </ul>
+              <div class="tab-content">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Lançar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  $(document).ready(function () {
+
+    var f1 = $('#form_movimentacao');
+    var b1 = f1.find('.btn[type="submit"]');
+
+    b1.click(function() {
+      f1.ajaxForm({
+        beforeSend: function() {
+          b1.attr('disabled', 'disabled');
+        },
+        success: function(e) {
+          b1.removeAttr('disabled');
+          if (e.error == false) {
+            location.reload();
+          } else {
+            Swal.fire('Erro ao lançar movimentação', e.errors.join('<br>'), 'error');
+          }
+        },
+        error: function(e) {
+          b1.removeAttr('disabled');
+          console.log(e);
+        }
+      });
+    });
+
+    $('[name="produtos[]"]').select2({
+      placeholder: 'Selecione um ou mais produtos'
+    });
+
+    $('[name="produtos[]"]').change(function () {
+      let produtos = $(this).find('option:checked');
+      let container = $('#tab_produtos_movimentacao');
+      let func = $('[name="lancar"]').val();
+
+      let tabs = [];
+
+      for (let produto of produtos) {
+        let id = $(produto).attr('value');
+        tabs.push(`#tab_produto_${id}`);
+
+        if ($(container.find(`.nav a[href="#tab_produto_${id}"]`)).length == 0) {
+          let medida = $(produto).attr('data-medida');
+          let nome = $(produto).text();
+          medida = medida.split(',');
+          let html_li = `
+            <li class="nav-item">
+              <a class="nav-link" href="#tab_produto_${id}" data-toggle="tab">${nome}</a>
+            </li>
+          `;
+          let html_tab = `
+            <div class="tab-pane" id="tab_produto_${id}" role="tabpanel">
+              <div class="form-group">
+                <label><span class="text-func text-capitalize">${func}</span> de</label>
+                <div class="input-group">
+                  <input type="text" name="obj[${id}]" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text text-un">${medida[1]}</span>
+                  </div>
+                </div>
+                <small>${medida[0]}</small>
+              </div>
+            </div>
+          `;
+  
+          let li = $(html_li).appendTo(container.find('.nav'));
+          let tab = $(html_tab).appendTo(container.find('.tab-content'));
+  
+          if (container.find('.nav li').length == 1) {
+            li.find('.nav-link').addClass('active');
+            tab.addClass('active');
+            container.slideDown();
+          }
+        }
+      }
+
+      let all_tabs = container.find('.nav li');
+      if (tabs.length < all_tabs.length) {
+        for (let t of all_tabs) {
+          let n = $(t).find('.nav-link').attr('href');
+          if (!tabs.includes(n)) {
+            $(t).remove();
+            $(n).remove();
+          }
+        }
+        container.find(tabs[0]).addClass('active');
+        container.find(`a[href="${tabs[0]}"]`).addClass('active');
+      }
+    })
+
+    $('[name="lancar"]').change(function () {
+      let func = $(this).val();
+      $(this).closest('.modal-content').find('.text-func').text(func);
+      $(this).closest('.modal-content').find('.modal-title span').text(func);
+    });
+  });
+
+</script>

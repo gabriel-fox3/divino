@@ -3,7 +3,13 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h3 class="text-center">Gerenciar estoque</h3>
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
+          <div>
+            <a href="javascript:movimentacao('entrada')" class="btn-lg btn btn-outline-success mr-2"><i class="fas fa-arrow-down pr-3"></i> Lançar entrada</a>
+            <a href="javascript:movimentacao('saida')" class="btn-lg btn btn-outline-danger"><i class="fas fa-arrow-up pr-3"></i> Lançar saída</a>
+          </div>
+          <h3 class="m-0 text-center">Gerenciar estoque</h3>
+        </div>
         
         {% if not categoria is defined %}
           <div class="holder-estoque mt-4">
@@ -72,10 +78,14 @@
                       </div>
                       <div class="head">
                         <div class="img" style="background-image: url('{{ produto.imagem }}')"></div>
-                        <span>{{ produto.nome }}</span>
+                        <span class="mt-2">{{ produto.nome }}</span>
                       </div>
                       <div class="foot">
-                        {{ produto.qnt_atual ~ ' ' ~ produto.medida}}
+                        {% set medida = produto.medida|split(',') %}
+                        {% if produto.qnt_atual > 1 %}
+                          {% set medida = medida[0] ~ 's' %}
+                        {% endif %}
+                        {{ produto.qnt_atual ~ ' ' ~ medida }}
                         <div>
                           <i class="fas fa-circle text-{{ produto.ativo == 1 ? 'success' : 'danger' }} pr-2"></i> {{ produto.ativo == 1 ? 'Ativo' : 'Inativo' }}
                         </div>
@@ -100,8 +110,15 @@
 
 {{ modal_add_categoria }}
 {{ modal_add_produto }}
+{{ modal_movimentacao }}
 
 <script>
+
+  function movimentacao(func) {
+    let modal = $('#modalMovimentacao');
+    modal.find(`[name="lancar"][value="${func}"]`).attr('checked', true).trigger('change');
+    modal.modal('show');
+  }
 
   $(document).ready(function () {
     $('.holder-estoque .item .dropdown-menu .edit').click(function () {

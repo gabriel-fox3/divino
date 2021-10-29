@@ -23,6 +23,30 @@ body[data-theme="dark"] .modal-content .custom-switch .custom-control-input:chec
   background-color: #d1d1d1;
 }
 
+body[data-theme="dark"] .modal-content .tab .nav-tabs .nav-link.active {
+  background-color: #fff;
+  color: #293042
+}
+
+body[data-theme="dark"] .modal-content .tab .tab-content {
+  background-color: #fff;
+}
+
+body[data-theme="dark"] .modal-content .tab .tab-content .h1, 
+body[data-theme="dark"] .modal-content .tab .tab-content .h2, 
+body[data-theme="dark"] .modal-content .tab .tab-content .h3, 
+body[data-theme="dark"] .modal-content .tab .tab-content .h4, 
+body[data-theme="dark"] .modal-content .tab .tab-content .h5, 
+body[data-theme="dark"] .modal-content .tab .tab-content .h6, 
+body[data-theme="dark"] .modal-content .tab .tab-content h1, 
+body[data-theme="dark"] .modal-content .tab .tab-content h2, 
+body[data-theme="dark"] .modal-content .tab .tab-content h3, 
+body[data-theme="dark"] .modal-content .tab .tab-content h4, 
+body[data-theme="dark"] .modal-content .tab .tab-content h5, 
+body[data-theme="dark"] .modal-content .tab .tab-content h6 {
+  color: #293042
+}
+
 #sidebar {
   z-index: 99;
 }
