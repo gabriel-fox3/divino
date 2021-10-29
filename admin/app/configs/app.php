@@ -19,17 +19,17 @@ if (USE_SSL == true) {
 }
 
 // // DB Config
-define('DB_TYPE', "mysql");
-define('DB_HOST', "189.126.106.70");
-define('DB_PORT', "3306");
-define('DB_USER', "fox3");
-define('DB_PASSWORD', "f0x1990");
-define('DB_NAME', "divino");
+// define('DB_TYPE', "mysql");
+// define('DB_HOST', "189.126.106.70");
+// define('DB_PORT', "3306");
+// define('DB_USER', "fox3");
+// define('DB_PASSWORD', "f0x1990");
+// define('DB_NAME', "divino");
 
 // DB Config
-// define('DB_TYPE', "mysql");
-// define('DB_HOST', "localhost");
-// define('DB_PORT', "3306");
-// define('DB_USER', "divinos");
-// define('DB_PASSWORD', "f0x@1990_divino");
-// define('DB_NAME', "divinos");
+define('DB_TYPE', "mysql");
+define('DB_HOST', "localhost");
+define('DB_PORT', "3306");
+define('DB_USER', "divinos");
+define('DB_PASSWORD', "f0x@1990_divino");
+define('DB_NAME', "divinos");
