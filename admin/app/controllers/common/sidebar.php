@@ -82,44 +82,54 @@ class ControllerCommonSidebar extends BaseController {
       'url' => $this->url->link('estoque/home')
     );
 
-    // Cronogramas
-    $cronogramas = array(
-      'text' => $this->language->get('text_cronogramas'),
-      'icon' => '<i class="align-middle" data-feather="folder"></i>',
+    $items[] = array(
+      'text' => $this->language->get('text_cardapio'),
+      'icon' => '<i class="fas fa-receipt"></i>',
       'active' => array(
-        'cronograma/home', 'cronograma/andamento', 'cronograma/gerenciar', 'cronograma/editor'
+        'cardapio/home'
       ),
-      'items' => array()
+      'url' => $this->url->link('cardapio/home')
     );
 
-      $cronogramas['items'][] = array(
-        'text' => $this->language->get('text_gerenciar'),
-        'icon' => '<i class="align-middle" data-feather="play"></i>',
-        'url' => $this->url->link('cronograma/home'),
-        'active' => array(
-          'cronograma/home', 'cronograma/editor'
-        )
-      );
 
-      $cronogramas['items'][] = array(
-        'text' => $this->language->get('text_andamento'),
-        'icon' => '<i class="align-middle" data-feather="play"></i>',
-        'url' => $this->url->link('cronograma/andamento'),
-        'active' => array(
-          'cronograma/andamento'
-        )
-      );
+    // // Cronogramas
+    // $cronogramas = array(
+    //   'text' => $this->language->get('text_cronogramas'),
+    //   'icon' => '<i class="align-middle" data-feather="folder"></i>',
+    //   'active' => array(
+    //     'cronograma/home', 'cronograma/andamento', 'cronograma/gerenciar', 'cronograma/editor'
+    //   ),
+    //   'items' => array()
+    // );
 
-      $cronogramas['items'][] = array(
-        'text' => $this->language->get('text_editar'),
-        'icon' => '<i class="align-middle" data-feather="play"></i>',
-        'url' => $this->url->link('cronograma/gerenciar'),
-        'active' => array(
-          'cronograma/gerenciar'
-        )
-      );
+    //   $cronogramas['items'][] = array(
+    //     'text' => $this->language->get('text_gerenciar'),
+    //     'icon' => '<i class="align-middle" data-feather="play"></i>',
+    //     'url' => $this->url->link('cronograma/home'),
+    //     'active' => array(
+    //       'cronograma/home', 'cronograma/editor'
+    //     )
+    //   );
 
-      $items[] = $cronogramas;
+    //   $cronogramas['items'][] = array(
+    //     'text' => $this->language->get('text_andamento'),
+    //     'icon' => '<i class="align-middle" data-feather="play"></i>',
+    //     'url' => $this->url->link('cronograma/andamento'),
+    //     'active' => array(
+    //       'cronograma/andamento'
+    //     )
+    //   );
+
+    //   $cronogramas['items'][] = array(
+    //     'text' => $this->language->get('text_editar'),
+    //     'icon' => '<i class="align-middle" data-feather="play"></i>',
+    //     'url' => $this->url->link('cronograma/gerenciar'),
+    //     'active' => array(
+    //       'cronograma/gerenciar'
+    //     )
+    //   );
+
+    //   $items[] = $cronogramas;
 
     
 

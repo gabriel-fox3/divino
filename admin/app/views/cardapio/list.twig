@@ -1,0 +1,94 @@
+{{ header }}
+  
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
+          <div>
+            <a href="#modalAddCategoria" data-toggle="modal" class="btn-lg btn btn-outline-dark mr-2"><i class="fas fa-plus pr-3"></i> Adicionar categoria</a>
+            <a href="#modalAddProduto" data-toggle="modal" class="btn-lg btn btn-outline-dark mr-2"><i class="fas fa-plus pr-3"></i> Adicionar produto</a>
+          </div>
+          <h3 class="m-0 text-center">Gerenciar cardápio</h3>
+        </div>
+
+        <div class="cardapio mt-4 p-5">
+          {% if categorias_cardapio is defined %}
+            {% for categoria in categorias_cardapio %}
+              <div class="categoria">
+                <div class="toggler d-flex align-items-center mb-2" data-toggle="collapse" data-target="#categoria_{{ categoria.idcategoria_cardapio }}">
+                  <i class="fas fa-chevron-up"></i>
+                  <h5 class="m-0"> {{ categoria.nome }} 
+                    <a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a>
+                  </h5>
+                </div>
+                <div class="collapse show" id="categoria_{{ categoria.idcategoria_cardapio }}">
+                  <div class="table-responsive">
+                    <table class="table table-sm table-hover table-striped table-borderless">
+                      <tbody>
+                        <tr>
+                          <td class="status">
+                            <span class="text-success">Disponível</span>
+                            <a href="javascript:;"><i class="fas fa-question-circle ml-2"></i></a>
+                            <ul class="list-unstyled">
+                              <li>teste</li>
+                            </ul>
+                          </td>
+                          <td>Produto 1</td>
+                          <td>R$ 20,00</td>
+                          <td><a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a></td>
+                        </tr>
+                        <tr>
+                          <td class="status">
+                            <span class="text-success">Disponível</span>
+                            <a href="javascript:;"><i class="fas fa-question-circle ml-2"></i></a>
+                            <ul class="list-unstyled">
+                              <li>teste</li>
+                            </ul>
+                          </td>
+                          <td>Produto 1</td>
+                          <td>R$ 20,00</td>
+                          <td><a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ modal_add_categoria }}
+  {{ modal_add_produto }}
+
+  <script>
+
+    $(document).ready(function () {
+      $('.cardapio .categoria .status a').popover({
+        trigger: 'focus',
+        container: 'body',
+        content: $('.cardapio .categoria .status ul').prop("outerHTML"),
+        html: true,
+        placement: 'right',
+        title: 'Informações'
+      })
+      
+      $('.cardapio .categoria .collapse').on('hide.bs.collapse', function () {
+        $(this).parent().find('.toggler > i').addClass('fa-rotate-180');
+      });
+
+      $('.cardapio .categoria .collapse').on('show.bs.collapse', function () {
+        $(this).parent().find('.toggler > i').removeClass('fa-rotate-180');
+      });
+
+      $('.cardapio .categoria .toggler a').click(function (e) {
+        e.stopPropagation();
+      })
+    });
+
+  </script>
+
+{{ footer }}
