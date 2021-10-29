@@ -48,11 +48,13 @@
   
   <script>
     $(document).ready(function () {
-      $('.btn-select-icon').iconpicker();
+      const modal_edit_categoria = $('#modalEditCategoria');
+      
+      modal_edit_categoria.find('.btn-select-icon').iconpicker();
   
-      $('.btn-select-icon').on('iconpickerSelected', function(event){
+      modal_edit_categoria.find('.btn-select-icon').on('iconpickerSelected', function(event){
         $(this).html(`<i class="${event.iconpickerValue}"></i>`);
-        $('#modalEditCategoria').find('[name="icone"]').val(event.iconpickerValue);
+        modal_edit_categoria.find('[name="icone"]').val(event.iconpickerValue);
       });
     });
   </script>

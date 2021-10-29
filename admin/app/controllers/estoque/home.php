@@ -220,6 +220,7 @@ class ControllerEstoqueHome extends BaseController {
                 if (file_exists(UPLOADS_DIR . 'produtos/' . $produto['imagem'])) unlink(UPLOADS_DIR . 'produtos/' . $produto['imagem']);
                 if (file_exists(UPLOADS_DIR . 'produtos/compressed/' . $produto['imagem'])) unlink(UPLOADS_DIR . 'produtos/compressed/' . $produto['imagem']);
               }
+
               $produto['imagem'] = $img_name;
               $this->func->compressImage($path_upload . $img_name, $path_upload . 'compressed/' . $img_name, 75);
               

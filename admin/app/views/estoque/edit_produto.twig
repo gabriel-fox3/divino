@@ -92,27 +92,29 @@
   
   <script>
     $(document).ready(function () {
+
+      const modal_edit_produto = $('#modalEditProduto');
   
-      $('[name="categoria[]"]').select2({
+      modal_edit_produto.find('[name="categoria[]"]').select2({
         placeholder: "Selecione"
       });
   
-      $('[name="medida"]').change(function () {
+      modal_edit_produto.find('[name="medida"]').change(function () {
         let selected = $(this).find('option:selected');
         let un = $(selected).attr('value').split(',');
         $('.text-un').text(un[1]);
       });
 
-      $('[name="medida"]').trigger('change');
+      modal_edit_produto.find('[name="medida"]').trigger('change');
   
-      $('.btn-imagem').click(function () {
-        let i = $('[name="imagem"]');
+      modal_edit_produto.find('.btn-imagem').click(function () {
+        let i = modal_edit_produto.find('[name="imagem"]');
         i.click();
   
         i.change(function () {
           let f = $(this).prop('files');
           f = f[0];
-          $('.img-preview').attr('src', URL.createObjectURL(f))
+          modal_edit_produto.find('.img-preview').attr('src', URL.createObjectURL(f))
         })
       })
     

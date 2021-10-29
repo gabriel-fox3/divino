@@ -15,4 +15,4 @@
     'png', 'jpg', 'jpeg'
   ));
 
-  define('MAX_SIZE_IMAGENS', 40000);
+  define('MAX_SIZE_IMAGENS', 4000000);
