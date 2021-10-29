@@ -10,4 +10,6 @@ return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Mubbi\\' => array($baseDir . '/framework/system'),
+    'Brick\\Money\\' => array($vendorDir . '/brick/money/src'),
+    'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
 );

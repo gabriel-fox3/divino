@@ -28,6 +28,7 @@ use Mubbi\Registry;
 use Mubbi\Func;
 use Mubbi\Language;
 use User\User;
+use Money\Money;
 /**
  * Mubbi Custom PHP Framework
  *

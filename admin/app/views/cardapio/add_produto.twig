@@ -80,6 +80,9 @@
 <script>
 
   $(document).ready(function () {
+    
+    $('[name="preco"]').mask('000.000.000.000.000,00', {reverse: true});
+
     $('[name="produtos[]"]').select2({
       placeholder: 'Selecione um ou mais produtos'
     });

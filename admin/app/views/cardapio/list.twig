@@ -25,30 +25,27 @@
                   <div class="table-responsive">
                     <table class="table table-sm table-hover table-striped table-borderless">
                       <tbody>
-                        <tr>
-                          <td class="status">
-                            <span class="text-success">Disponível</span>
-                            <a href="javascript:;"><i class="fas fa-question-circle ml-2"></i></a>
-                            <ul class="list-unstyled">
-                              <li>teste</li>
-                            </ul>
-                          </td>
-                          <td>Produto 1</td>
-                          <td>R$ 20,00</td>
-                          <td><a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a></td>
-                        </tr>
-                        <tr>
-                          <td class="status">
-                            <span class="text-success">Disponível</span>
-                            <a href="javascript:;"><i class="fas fa-question-circle ml-2"></i></a>
-                            <ul class="list-unstyled">
-                              <li>teste</li>
-                            </ul>
-                          </td>
-                          <td>Produto 1</td>
-                          <td>R$ 20,00</td>
-                          <td><a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a></td>
-                        </tr>
+                        {% if categoria.produtos is defined and categoria.produtos|length > 0 %}
+                          {% for produto in categoria.produtos %}
+                            <tr>
+                              <td class="status">
+                                <span class="text-{{ produto.status_geral == true ? 'success' : 'danger' }}">{{ produto.status_geral == true ? 'Disponível' : 'Indisponível' }}</span>
+                                <a href="javascript:;"><i class="fas fa-question-circle ml-2"></i></a>
+                                <ul class="">
+                                  {% if produto.info is defined and produto.info|length > 0 %}
+                                    {% for item in produto.info %}
+                                      {% set medida = item.produto.medida|split(',') %}
+                                      <li>{{ item.produto.nome }} - x {{ item.qnt  ~ ' ' ~ medida[1] }}</li>
+                                    {% endfor %}
+                                  {% endif %}
+                                </ul>
+                              </td>
+                              <td>{{ produto.nome }}</td>
+                              <td>{{ produto.preco }}</td>
+                              <td><a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a></td>
+                            </tr>
+                          {% endfor %}
+                        {% endif %}
                       </tbody>
                     </table>
                   </div>

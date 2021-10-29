@@ -2,6 +2,9 @@
 
 namespace Mubbi;
 
+use Brick\Money\Money;
+// https://github.com/brick/money
+
 class ControllerCardapioHome extends BaseController {
   public function index($data = null) {
 
@@ -9,6 +12,11 @@ class ControllerCardapioHome extends BaseController {
     $this->document->addStyle('css/styles/cardapio');
     
     $data['categorias_cardapio'] = $this->getListCategorias();
+
+    // echo "<pre>";
+    //   print_r($data['categorias_cardapio']);
+    // echo "</pre>";
+    // exit;
 
     $data['action_add_categoria'] = $this->url->link('cardapio/home/add_categoria');
     $data['modal_add_categoria'] = $this->load->view('cardapio/add_categoria', $data);
@@ -29,11 +37,41 @@ class ControllerCardapioHome extends BaseController {
 
   public function getListCategorias() {
     $this->load->model('cardapio/categoria_cardapio');
-    // $this->load->model('estoque/produto');
+    $this->load->model('cardapio/produto_cardapio');
+    $this->load->model('estoque/produto');
     $categorias = $this->model_cardapio_categoria_cardapio->getAll();
     if (sizeof($categorias) > 0) {
       foreach($categorias as $key => $val) {
-        // $categorias[$key]['produtos'] = $this->model_estoque_produto->getByIdcategoria_cardapio($val['idcategoria_cardapio']);
+        $produtos = $this->model_cardapio_produto_cardapio->getByIdcategoria_cardapio($val['idcategoria_cardapio']);
+        if (sizeof($produtos) > 0) {
+          foreach($produtos as $i => $produto) {
+            $status_produto_cardapio = true;
+
+            $preco = Money::ofMinor($produto['preco'], 'BRL');
+            $items_produto = json_decode($produto['produtos'], true);
+            $obj_produto = array();
+            if (sizeof($items_produto) > 0) {
+              foreach($items_produto as $e => $info) {
+                $produto_estoque = $this->model_estoque_produto->getById($e);
+                $status = false;
+                if ((float)$produto_estoque['qnt_atual'] >= (float)$info['qnt']) $status = true;
+
+                $obj_produto[] = array(
+                  'produto' => $produto_estoque,
+                  'qnt' => $info['qnt'],
+                  'status' => $status
+                );
+
+                if ($status == false) $status_produto_cardapio = false;
+              }
+            }
+
+            $produtos[$i]['status_geral'] = $status_produto_cardapio;
+            $produtos[$i]['info'] = $obj_produto;
+            $produtos[$i]['preco'] = $preco->formatTo('pt_BR');
+          }
+        }
+        $categorias[$key]['produtos'] = $produtos;
         $categorias[$key]['link'] = $this->url->link('cardapio/home&idc=' . $val['idcategoria_cardapio']);
       }
     }
@@ -95,13 +133,18 @@ class ControllerCardapioHome extends BaseController {
 
       $count = $this->model_cardapio_produto_cardapio->getByIdcategoria_cardapio($this->request->post['categoria']);
 
+      $preco = str_replace('.', '', $this->request->post['preco']);
+      $preco = str_replace(',', '.', $preco);
+      $preco = Money::of($preco, 'BRL');
+      $preco = $preco->getMinorAmount()->toInt();
+
       $produto_cardapio = array(
         'nome' => $this->request->post['nome'],
         'categoria' => $this->request->post['categoria'],
-        'preco' => $this->request->post['preco'],
+        'preco' => $preco,
         'descricao' => $this->request->post['descricao'],
-        'ativo' => isset($this->request->post['ativo']) && $this->request->post['ativo'] == '1' ? '1' : '0',
-        'ordem' => sizeof($count)
+        'ativo' => (isset($this->request->post['ativo']) && $this->request->post['ativo'] == '1' ? '1' : '0'),
+        'ordem' => (string)sizeof($count)
       );
 
       $produtos = $this->request->post['produtos'];
@@ -126,17 +169,14 @@ class ControllerCardapioHome extends BaseController {
 
       $produto_cardapio['produtos'] = json_encode($this->request->post['obj']);
 
-      echo "<pre>";
-        print_r($produto_cardapio);
-      echo "</pre>";
-      exit;
+      $produto_cardapio = $this->model_cardapio_produto_cardapio->add($produto_cardapio);
 
-      $this->log->save('add_produto', array(
+      $this->log->save('add_produto_cardapio', array(
         'new' => serialize($produto)
       ));
       
       $this->session->data['success'] = array('key' => 'add_produto');
-      $this->response->redirect($this->url->link('estoque/home') . (isset($this->session->data['last_id_categoria']) ? '&idc=' . $this->session->data['last_id_categoria'] : ''));
+      $this->response->redirect($this->url->link('cardapio/home'));
     }
   }
 }

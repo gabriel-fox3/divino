@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "twig/twig": "2.0"
+        "twig/twig": "3.3.2",
+        "brick/money": "^0.5.3"
     },
     "autoload": {
     "psr-4": {

@@ -25,6 +25,11 @@ class ComposerStaticInit40d823617368319492b984a9779c1fe4
         array (
             'Mubbi\\' => 6,
         ),
+        'B' => 
+        array (
+            'Brick\\Money\\' => 12,
+            'Brick\\Math\\' => 11,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -44,11 +49,18 @@ class ComposerStaticInit40d823617368319492b984a9779c1fe4
         array (
             0 => __DIR__ . '/../..' . '/framework/system',
         ),
+        'Brick\\Money\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/money/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
