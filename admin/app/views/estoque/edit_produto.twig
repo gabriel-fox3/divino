@@ -102,7 +102,7 @@
       modal_edit_produto.find('[name="medida"]').change(function () {
         let selected = $(this).find('option:selected');
         let un = $(selected).attr('value').split(',');
-        $('.text-un').text(un[1]);
+        modal_edit_produto.find('.text-un').text(un[1]);
       });
 
       modal_edit_produto.find('[name="medida"]').trigger('change');
