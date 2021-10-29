@@ -25,7 +25,9 @@ class ControllerCardapioHome extends BaseController {
     $data['action_add_produto'] = $this->url->link('cardapio/home/add_produto');
     $data['modal_add_produto'] = $this->load->view('cardapio/add_produto', $data);
 
-
+    $data['url_edit_produto'] = $this->url->link('cardapio/home/edit_produto');
+    $data['url_edit_categoria'] = $this->url->link('cardapio/home/edit_categoria');
+    $data['url_excluir_categoria'] = $this->url->link('cardapio/home/delete_categoria');
         
     $data['sidebar'] = $this->load->controller('common/sidebar', $data);
     $data['navbar'] = $this->load->controller('common/navbar', $data);
@@ -84,6 +86,7 @@ class ControllerCardapioHome extends BaseController {
     $this->load->model('estoque/produto');
     // $produtos = $this->model_estoque_produto->getBy
     $categorias = $this->model_estoque_categoria_produto->getAll(true);
+    
     if (sizeof($categorias) > 0) {
       foreach($categorias as $key => $categoria) {
         $categoria['produtos'] = $this->model_estoque_produto->getByIdcategoria_produto($categoria['idcategoria_produto']);
@@ -111,7 +114,7 @@ class ControllerCardapioHome extends BaseController {
       $categoria = array(
         'nome' => $this->request->post['nome'],
         'ativo' => isset($this->request->post['ativo']) && $this->request->post['ativo'] == '1' ? '1' : '0',
-        'ordem' => sizeof($count)
+        'ordem' => (string)sizeof($count)
       );
 
       $categoria = $this->model_cardapio_categoria_cardapio->add($categoria);
@@ -124,6 +127,52 @@ class ControllerCardapioHome extends BaseController {
       $this->response->redirect($this->url->link('cardapio/home'));
     }
   }
+
+  public function edit_categoria() {
+    $this->load->model('cardapio/categoria_cardapio');
+    if ($this->request->server['REQUEST_METHOD'] == 'GET') {
+      $data = array();
+      $data['categoria'] = $this->model_cardapio_categoria_cardapio->getById($this->request->get['id']);
+      $data['action_edit_categoria'] = $this->url->link('cardapio/home/edit_categoria');
+
+      $this->response->json(array('result' => $this->load->view('cardapio/edit_categoria', $data)));
+    } else if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+      $categoria = $this->model_cardapio_categoria_cardapio->getById($this->request->post['id']);
+      $categoria_old = $categoria;
+
+      if (isset($this->request->post['ativo']) && $this->request->post['ativo'] == '1') {
+        $categoria['ativo'] = 1;
+      } else {
+        $categoria['ativo'] = 0;
+      }
+
+      $categoria['nome'] = $this->request->post['nome'];
+
+      $categoria = $this->model_cardapio_categoria_cardapio->save($categoria);
+
+      $this->log->save('edit_categoria_cardapio', array(
+        'new' => serialize($categoria),
+        'old' => serialize($categoria_old)
+      ));
+      
+      $this->session->data['success'] = array('key' => 'edit_categoria');
+      $this->response->redirect($this->url->link('cardapio/home'));
+    }
+  }
+
+  public function delete_categoria() {
+    if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+      $this->load->model('cardapio/categoria_cardapio');
+      $categoria = $this->model_cardapio_categoria_cardapio->getById($this->request->post['id']);
+      $categoria['excluido'] = '1';
+      $categoria['ativo'] = '0';
+      $categoria = $this->model_cardapio_categoria_cardapio->save($categoria);
+
+      $this->session->data['success'] = array('key' => 'delete_categoria');
+      $this->response->json(array('error' => false));
+    }
+  }
+
 
 
   /* Produtos */
@@ -176,6 +225,74 @@ class ControllerCardapioHome extends BaseController {
       ));
       
       $this->session->data['success'] = array('key' => 'add_produto');
+      $this->response->redirect($this->url->link('cardapio/home'));
+    }
+  }
+
+  public function edit_produto() {
+    $this->load->model('cardapio/produto_cardapio');
+    $this->load->model('estoque/produto');
+    if ($this->request->server['REQUEST_METHOD'] == 'GET') {
+      $data = array();
+      $data['categorias_cardapio'] = $this->getListCategorias();
+      $data['categorias_produtos'] = $this->get_categorias_produtos();
+      $data['produto'] = $this->model_cardapio_produto_cardapio->getById($this->request->get['id']);
+
+      $data['produto']['produtos'] = json_decode($data['produto']['produtos'], true);
+      if (sizeof($data['produto']['produtos']) > 0) {
+        foreach($data['produto']['produtos'] as $idproduto => $info) {
+          $data['produto']['produtos'][$idproduto]['produto'] = $this->model_estoque_produto->getById($idproduto);
+        }
+      }
+
+      $data['action_edit_produto'] = $this->url->link('cardapio/home/edit_produto');
+
+      $this->response->json(array('result' => $this->load->view('cardapio/edit_produto', $data)));
+    } else if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+      $produto = $this->model_cardapio_produto_cardapio->getById($this->request->post['id']);
+      $produto_old = $produto;
+
+      $preco = str_replace('.', '', $this->request->post['preco']);
+      $preco = str_replace(',', '.', $preco);
+      $preco = Money::of($preco, 'BRL');
+      $preco = $preco->getMinorAmount()->toInt();
+
+      $produto['nome'] = $this->request->post['nome'];
+      $produto['categoria'] = $this->request->post['categoria'];
+      $produto['preco'] = $preco;
+      $produto['descricao'] = $this->request->post['descricao'];
+      $produto['ativo'] = (isset($this->request->post['ativo']) && $this->request->post['ativo'] == '1' ? '1' : '0');
+
+      $produtos = $this->request->post['produtos'];
+      $obj = $this->request->post['obj'];
+
+      $errors = array();
+
+      if (sizeof($produtos) > 0) {
+        foreach($produtos as $idproduto) {
+          if (!isset($obj[$idproduto]) || $obj[$idproduto] == '' || (float)$obj[$idproduto] == 0) {
+            $produto = $this->model_estoque_produto->getById($idproduto);
+            $errors[] = 'Informe a quantidade de <b>' . $produto['nome'] . '</b>.';
+            continue;
+          }
+        }
+      }
+
+      if (sizeof($errors) > 0) {
+        $this->response->json(array('error' => true, 'errors' => $errors));
+        exit;
+      }
+
+      $produto['produtos'] = json_encode($this->request->post['obj']);
+
+      $produto = $this->model_cardapio_produto_cardapio->save($produto);
+
+      $this->log->save('edit_produto', array(
+        'new' => serialize($produto),
+        'old' => serialize($produto_old)
+      ));
+      
+      $this->session->data['success'] = array('key' => 'edit_produto');
       $this->response->redirect($this->url->link('cardapio/home'));
     }
   }

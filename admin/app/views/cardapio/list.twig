@@ -17,9 +17,9 @@
               <div class="categoria">
                 <div class="toggler d-flex align-items-center mb-2" data-toggle="collapse" data-target="#categoria_{{ categoria.idcategoria_cardapio }}">
                   <i class="fas fa-chevron-up"></i>
-                  <h5 class="m-0"> {{ categoria.nome }} 
-                    <a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a>
-                  </h5>
+                  <h5 class="m-0"> {{ categoria.nome }} </h5>
+                  <a href="javascript:;" data-id="{{ categoria.idcategoria_cardapio }}" class="btn btn-sm btn-dark edit"><i class="fas fa-pen-alt"></i></a>
+                  <a href="javascript:;" data-id="{{ categoria.idcategoria_cardapio }}" class="ml-2 btn btn-sm btn-outline-danger delete"><i class="fas fa-times"></i></a>
                 </div>
                 <div class="collapse show" id="categoria_{{ categoria.idcategoria_cardapio }}">
                   <div class="table-responsive">
@@ -42,7 +42,9 @@
                               </td>
                               <td>{{ produto.nome }}</td>
                               <td>{{ produto.preco }}</td>
-                              <td><a href="#" class="btn btn-sm btn-dark"><i class="fas fa-pen-alt"></i></a></td>
+                              <td>
+                                <a href="javascript:;" data-id="{{ produto.idproduto_cardapio }}" class="btn btn-sm btn-dark edit"><i class="fas fa-pen-alt"></i></a>
+                              </td>
                             </tr>
                           {% endfor %}
                         {% endif %}
@@ -80,10 +82,63 @@
       $('.cardapio .categoria .collapse').on('show.bs.collapse', function () {
         $(this).parent().find('.toggler > i').removeClass('fa-rotate-180');
       });
-
-      $('.cardapio .categoria .toggler a').click(function (e) {
+      
+      // categorias
+      $('.cardapio .categoria .toggler .edit').click(function (e) {
         e.stopPropagation();
-      })
+        let id = $(this).attr('data-id');
+        $.get('{{ url_edit_categoria }}', {
+          id
+        }, function (res) {
+          let e = $(res.result).appendTo('#painel .main');
+          $(e).find('#modalEditCategoria').modal('show');
+
+          $(e).find('#modalEditCategoria').on('hidden.bs.modal', function () {
+            e.remove();
+          })
+        })
+      });
+
+      $('.cardapio .categoria .toggler .delete').click(function (e) {
+        e.stopPropagation();
+        let id = $(this).attr('data-id');
+        Swal.fire({ 
+          title: 'Excluir categoria', 
+          icon: 'question', 
+          text: 'Você tem certeza que deseja excluir esta categoria?', 
+          showCancelButton: true, 
+          confirmButtonText: `Sim`, 
+          cancelButtonText: `Cancelar`, 
+        }).then((result) => { 
+          if (result.isConfirmed) { 
+            $.post('{{ url_excluir_categoria }}', {
+              id
+            }, function (res) {
+              if (res.error == false) {
+                location.reload();
+              } else {
+                Swal.fire(res.msg.type, res.msg.title, res.msg.title);
+              }
+            })
+          } 
+        }); 
+      });
+
+
+      // produtos 
+      $('.cardapio .categoria .table tr td .edit').click(function () {
+        let id = $(this).attr('data-id');
+        $.get('{{ url_edit_produto }}', {
+          id
+        }, function (res) {
+          let e = $(res.result).appendTo('#painel .main');
+          $(e).find('#modalEditProduto').modal('show');
+
+          $(e).find('#modalEditProduto').on('hidden.bs.modal', function () {
+            e.remove();
+          })
+        })
+      });
     });
 
   </script>
