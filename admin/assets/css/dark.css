@@ -12473,7 +12473,7 @@ body[data-sidebar-behavior="compact"]:not([data-sidebar-position="right"]) .side
   left: -16px;
 }
 body[data-sidebar-behavior="compact"]:not([data-sidebar-position="right"]) .sidebar.collapsed {
-  margin-left: -68px;
+  margin-left: -110px;
 }
 @media (min-width: 1px) and (max-width: 991.98px) {
   body[data-sidebar-behavior="compact"]:not([data-sidebar-position="right"]) .sidebar {

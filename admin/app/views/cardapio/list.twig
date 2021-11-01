@@ -18,7 +18,7 @@
                 <div class="toggler d-flex align-items-center mb-2" data-toggle="collapse" data-target="#categoria_{{ categoria.idcategoria_cardapio }}">
                   <i class="fas fa-chevron-up"></i>
                   <h5 class="m-0"> {{ categoria.nome }} </h5>
-                  <a href="javascript:;" data-id="{{ categoria.idcategoria_cardapio }}" class="btn btn-sm btn-dark edit"><i class="fas fa-pen-alt"></i></a>
+                  <a href="javascript:;" data-id="{{ categoria.idcategoria_cardapio }}" class="btn btn-sm btn-outline-dark edit"><i class="fas fa-pen-alt"></i></a>
                   <a href="javascript:;" data-id="{{ categoria.idcategoria_cardapio }}" class="ml-2 btn btn-sm btn-outline-danger delete"><i class="fas fa-times"></i></a>
                 </div>
                 <div class="collapse show" id="categoria_{{ categoria.idcategoria_cardapio }}">
@@ -35,7 +35,7 @@
                                   {% if produto.info is defined and produto.info|length > 0 %}
                                     {% for item in produto.info %}
                                       {% set medida = item.produto.medida|split(',') %}
-                                      <li>{{ item.produto.nome }} - x {{ item.qnt  ~ ' ' ~ medida[1] }}</li>
+                                      <li class="font-10 {{ item.status == false ? 'text-danger' : '' }}">{{ item.produto.nome }} - x {{ item.qnt  ~ ' ' ~ medida[1] }}</li>
                                     {% endfor %}
                                   {% endif %}
                                 </ul>
@@ -44,6 +44,7 @@
                               <td>{{ produto.preco }}</td>
                               <td>
                                 <a href="javascript:;" data-id="{{ produto.idproduto_cardapio }}" class="btn btn-sm btn-dark edit"><i class="fas fa-pen-alt"></i></a>
+                                <a href="javascript:;" data-id="{{ produto.idproduto_cardapio }}" class="ml-2 btn btn-sm btn-danger delete"><i class="fas fa-times"></i></a>
                               </td>
                             </tr>
                           {% endfor %}
@@ -139,6 +140,30 @@
           })
         })
       });
+
+      $('.cardapio .categoria .table tr td .delete').click(function () {
+        let id = $(this).attr('data-id');
+        Swal.fire({ 
+          title: 'Excluir produto', 
+          icon: 'question', 
+          text: 'Você tem certeza que deseja excluir este produto?', 
+          showCancelButton: true, 
+          confirmButtonText: `Sim`, 
+          cancelButtonText: `Cancelar`, 
+        }).then((result) => { 
+          if (result.isConfirmed) { 
+            $.post('{{ url_excluir_produto }}', {
+              id
+            }, function (res) {
+              if (res.error == false) {
+                location.reload();
+              } else {
+                Swal.fire(res.msg.type, res.msg.title, res.msg.title);
+              }
+            })
+          } 
+        }); 
+      }); 
     });
 
   </script>

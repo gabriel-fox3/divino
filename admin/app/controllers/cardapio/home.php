@@ -28,6 +28,7 @@ class ControllerCardapioHome extends BaseController {
     $data['url_edit_produto'] = $this->url->link('cardapio/home/edit_produto');
     $data['url_edit_categoria'] = $this->url->link('cardapio/home/edit_categoria');
     $data['url_excluir_categoria'] = $this->url->link('cardapio/home/delete_categoria');
+    $data['url_excluir_produto'] = $this->url->link('cardapio/home/delete_produto');
         
     $data['sidebar'] = $this->load->controller('common/sidebar', $data);
     $data['navbar'] = $this->load->controller('common/navbar', $data);
@@ -294,6 +295,19 @@ class ControllerCardapioHome extends BaseController {
       
       $this->session->data['success'] = array('key' => 'edit_produto');
       $this->response->redirect($this->url->link('cardapio/home'));
+    }
+  }
+
+  public function delete_produto() {
+    if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+      $this->load->model('cardapio/produto_cardapio');
+      $produto = $this->model_cardapio_produto_cardapio->getById($this->request->post['id']);
+      $produto['excluido'] = '1';
+      $produto['ativo'] = '0';
+      $produto = $this->model_cardapio_produto_cardapio->save($produto);
+
+      $this->session->data['success'] = array('key' => 'delete_produto');
+      $this->response->json(array('error' => false));
     }
   }
 }
