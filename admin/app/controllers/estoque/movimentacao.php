@@ -10,7 +10,7 @@ class ControllerEstoqueMovimentacao extends BaseController {
     return $this->load->view('estoque/movimentacao', $data);
   }
 
-  private function get_list() {
+  public function get_list() {
     $this->load->model('estoque/categoria_produto');
     $this->load->model('estoque/produto');
     // $produtos = $this->model_estoque_produto->getBy
@@ -29,7 +29,7 @@ class ControllerEstoqueMovimentacao extends BaseController {
         $categorias[$key] = $categoria;
       }
     }
-
+    
     return $categorias;
   }
 

@@ -1,0 +1,162 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modelId">
+  Launch
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Lançar entrada no financeiro</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+      <div class="modal-body">
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="chk_cardapio" name="chk_cardapio">
+          <label class="custom-control-label" for="chk_cardapio">Saída do cardápio</label>
+        </div>
+
+        <div class="saida_cardapio pt-3" style="display: none;">
+          <div class="form-group">
+            <label>Produtos *</label>
+            <select class="form-control" name="produtos[]" multiple required>
+              {% if produtos is defined %}
+                {% for categoria in produtos %}
+                  {% if categoria.produtos is defined and categoria.produtos|length > 0 %}
+                    <optgroup label="{{ categoria.nome }}">
+                      {% for produto in categoria.produtos %}
+                        {% if produto.status_geral == true %}
+                          <option value="{{ produto.idproduto_cardapio }}" data-preco="{{ produto.preco }}" data-preco-safe="{{ produto.preco_safe }}">{{ produto.nome }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </optgroup>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </select>
+          </div>
+          <div class="tab" style="display: none;" id="tab_produtos_movimentacao">
+            <ul class="nav nav-tabs" role="tablist">
+            </ul>
+            <div class="tab-content">
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-3">
+        
+        <div class="form-group w-50">
+          <label>Valor *</label>
+          <div class="input-group m-0">
+            <div class="input-group-prepend">
+              <span class="input-group-text">R$</span>
+            </div>
+            <input name="descricao" type="text" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descrição *</label>
+          <textarea class="form-control" name="descricao"></textarea>
+        </div>
+
+        
+
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#exampleModal').on('show.bs.modal', event => {
+    var button = $(event.relatedTarget);
+    var modal = $(this);
+    // Use above variables to manipulate the DOM
+    
+  });
+
+  $(document).ready(function () {
+    $('#chk_cardapio').change(function () {
+      if ($(this).prop('checked') == true) {
+        $('.saida_cardapio').slideDown();
+      } else {
+        $('.saida_cardapio').slideUp();
+      }
+    })
+
+    $('#modelId').modal('show');
+
+    $('[name="produtos[]"]').select2({
+      placeholder: 'Selecione um ou mais produtos'
+    });
+
+    $('[name="produtos[]"]').change(function () {
+      let produtos = $(this).find('option:checked');
+      let container = $('#tab_produtos_movimentacao');
+
+      let tabs = [];
+
+      for (let produto of produtos) {
+        let id = $(produto).attr('value');
+        tabs.push(`#tab_produto_${id}`);
+
+        if ($(container.find(`.nav a[href="#tab_produto_${id}"]`)).length == 0) {
+          let nome = $(produto).text();
+          let preco = $(produto).attr('data-preco');
+          let preco_safe = $(produto).attr('data-preco-safe');
+          let html_li = `
+            <li class="nav-item">
+              <a class="nav-link" href="#tab_produto_${id}" data-toggle="tab">${nome}</a>
+            </li>
+          `;
+          let html_tab = `
+            <div class="tab-pane" id="tab_produto_${id}" role="tabpanel">
+              <div class="form-group">
+                <label>Quantidade</label>
+                <input type="number" class="form-control" name="qnt[${id}]">
+                <small>${preco}</small>
+              </div>
+            </div>
+          `;
+  
+          let li = $(html_li).appendTo(container.find('.nav'));
+          let tab = $(html_tab).appendTo(container.find('.tab-content'));
+
+          tab.find('input[type="number"]').on('keyup change', function () {
+            let qnt = $(this).val();
+            console.log(preco_safe, qnt);
+          });
+  
+          if (container.find('.nav li').length == 1) {
+            li.find('.nav-link').addClass('active');
+            tab.addClass('active');
+            container.slideDown();
+          }
+        }
+      }
+
+      let all_tabs = container.find('.nav li');
+      if (tabs.length < all_tabs.length) {
+        for (let t of all_tabs) {
+          let n = $(t).find('.nav-link').attr('href');
+          if (!tabs.includes(n)) {
+            $(t).remove();
+            $(n).remove();
+          }
+        }
+        container.find(tabs[0]).addClass('active');
+        container.find(`a[href="${tabs[0]}"]`).addClass('active');
+      }
+    })
+  })
+</script>

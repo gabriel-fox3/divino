@@ -91,6 +91,15 @@ class ControllerCommonSidebar extends BaseController {
       'url' => $this->url->link('cardapio/home')
     );
 
+    $items[] = array(
+      'text' => $this->language->get('text_financeiro'),
+      'icon' => '<i class="fas fa-receipt"></i>',
+      'active' => array(
+        'financeiro/home'
+      ),
+      'url' => $this->url->link('financeiro/home')
+    );
+
 
     // // Cronogramas
     // $cronogramas = array(

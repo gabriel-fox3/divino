@@ -1,0 +1,34 @@
+#financeiro .resumo .card {
+  border-bottom: 5px solid
+}
+
+#financeiro .resumo .card .icon {
+  width: 40px;
+  height: 40px;
+  font-size: 35px;
+  margin-right: 15px;
+}
+
+#financeiro .resumo .card-success {
+  border-color: var(--success);
+}
+
+#financeiro .resumo .card-success .icon i {
+  color: var(--success);
+}
+
+#financeiro .resumo .card-danger {
+  border-color: var(--danger);
+}
+
+#financeiro .resumo .card-danger .icon i {
+  color: var(--danger);
+}
+
+#financeiro .resumo .card-info {
+  border-color: var(--info);
+}
+
+#financeiro .resumo .card-info .icon i {
+  color: var(--info);
+}
