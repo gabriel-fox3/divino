@@ -75,11 +75,6 @@ class ControllerFinanceiroHome extends BaseController {
   public function add_entrada() {
     if ($this->request->server['REQUEST_METHOD'] == 'POST') {
 
-      echo "<pre>";
-        print_r($this->request->post);
-      echo "</pre>";
-      exit;
-
       $this->load->model('financeiro/financeiro');
       $errors = array();
 
@@ -92,10 +87,11 @@ class ControllerFinanceiroHome extends BaseController {
         'valor' => '0',
         'descricao' => $this->request->post['descricao_geral'],
         'manual' => '1',
-        'obj' => array()
+        'obj' => ''
       );
 
       $obj = array();
+      $total = Money::of('0', 'BRL');
 
       $financeiro = $this->model_financeiro_financeiro->add($financeiro);
    
@@ -103,38 +99,106 @@ class ControllerFinanceiroHome extends BaseController {
       if (isset($this->request->post['chk_cardapio']) && $this->request->post['chk_cardapio'] == 'on') {
         $this->load->model('estoque/movimentacao');
         $this->load->model('estoque/produto');
-        $this->load->model('cardapio/produto');
+        $this->load->model('cardapio/produto_cardapio');
   
+        $movimentacao_estoque = array(
+          'lancar' => 'saida',
+          'descricao' => 'Movimentação financeira #' . $financeiro['idfinanceiro'],
+          'produtos' => array(), // produtos do estoque, não do catalogo
+          'obj' => array(), // quantidade de cada produto a sair do estoque (ex: 1l de vodka, 2un de agua)
+          'idusuario' => $this->user->getIdusuario(),
+          'joined' => date('Y-m-d H:i:s'),
+          'integration' => '1'
+        );
+
+        $produtos_estoque = array(); $qnt_estoque = array();
       
         $produtos = $this->request->post['produtos'];
+        if (sizeof($produtos) > 0) {
+          foreach($produtos as $idproduto) {
+            $produto_cardapio = $this->model_cardapio_produto_cardapio->getById($idproduto);
+            if (!isset($this->request->post['qnt'][$idproduto])) {
+              $errors[] = 'Você precisa especificar a quantidade de ' . $produto_cardapio['nome'];
+              continue;
+            }
 
+            $qnt = (int)$this->request->post['qnt'][$idproduto];
 
+            $preco = Money::ofMinor($produto_cardapio['preco'], 'BRL');
+            $preco = $preco->multipliedBy($qnt);
+            $total = $total->plus($preco);
+            
+            $ingredientes = json_decode($produto_cardapio['produtos'], true);
+            if (sizeof($ingredientes) > 0) {
+              foreach($ingredientes as $idp => $info) {
+                $produto_estoque = $this->model_estoque_produto->getById($idp);
+                $produto_estoque_old = $produto_estoque;
+
+                $valor_diminuir_produto = (float)$info['qnt'] * $qnt;
+                $produtos_estoque[] = $idp;
+                $qnt_estoque[$idp] = $valor_diminuir_produto;
+
+                $produto_estoque['qnt_atual'] = (float)$produto_estoque['qnt_atual'] - (float)$valor_diminuir_produto;
+
+                $produto_estoque = $this->model_estoque_produto->save($produto_estoque);
+                $this->log->save('movimentacao_edit_qnt_produto', array(
+                  'new' => serialize($produto_estoque),
+                  'old' => serialize($produto_estoque_old)
+                ));
+
+              }
+            }
+
+          }
+        }
+
+        $movimentacao_estoque['produtos'] = json_encode($produtos_estoque);
+        $movimentacao_estoque['obj'] = json_encode($qnt_estoque);
   
         if (sizeof($errors) > 0) {
           $this->model_financeiro_financeiro->delete($financeiro['idfinanceiro']);
           $this->response->json(array('error' => true, 'errors' => $errors));
           exit;
         }
-  
-        $movimentacao['obj'] = json_encode($movimentacao['obj']);
-        $movimentacao['produtos'] = json_encode($movimentacao['produtos']);
+        
+        $movimentacao_estoque = $this->model_estoque_movimentacao->add($movimentacao_estoque);
+        $this->log->save('add_financeiro_movimentacao_estoque', array(
+          'new' => serialize($movimentacao_estoque),
+        ));
 
         
-        $movimentacao = $this->model_estoque_movimentacao->add($movimentacao);
+        $obj['cardapio'] = $movimentacao_estoque;
         
-        $obj['cardapio'] = $movimentacao;
-        
-        $this->log->save('add_financeiro_movimentacao_estoque', array(
-          'new' => serialize($movimentacao),
-        ));
 
       }
 
       if (isset($this->request->post['chk_personalizadas']) && $this->request->post['chk_personalizadas'] == 'on') {
+        $entradas_personalizadas = array();
         foreach ($this->request->post['entrada'] as $entrada) {
-          
+          $valor = str_replace('.', '', $entrada['valor']);
+          $valor = str_replace(',', '.', $valor);
+          $valor = Money::of($valor, 'BRL');
+
+          $total = $total->plus($valor);
+
+          $valor = $valor->getMinorAmount()->toInt();
+          $entradas_personalizadas[] = array(
+            'desc' => $entrada['desc'],
+            'valor' => $valor
+          );
         }
       }
+
+      $obj['entradas'] = $entradas_personalizadas;
+      $financeiro['valor'] = $total->getMinorAmount()->toInt();
+      $financeiro['obj'] = json_encode($obj);
+
+      $financeiro = $this->model_financeiro_financeiro->save($financeiro);
+      $this->log->save('add_financeiro', array(
+        'new' => serialize($financeiro),
+      ));
+
+      $this->response->json(array('error' => false));
     }
     
   }
