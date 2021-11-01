@@ -1,78 +1,125 @@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modelId">
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalAddEntrada">
   Launch
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal fade" id="modalAddEntrada" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+      <form id="form_add_entrada" action="{{ action_add_entrada }}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
-            <h5 class="modal-title">Lançar entrada no financeiro</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-      <div class="modal-body">
-
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="chk_cardapio" name="chk_cardapio">
-          <label class="custom-control-label" for="chk_cardapio">Saída do cardápio</label>
+          <h5 class="modal-title">Lançar entrada no financeiro</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-
-        <div class="saida_cardapio pt-3" style="display: none;">
-          <div class="form-group">
-            <label>Produtos *</label>
-            <select class="form-control" name="produtos[]" multiple required>
-              {% if produtos is defined %}
-                {% for categoria in produtos %}
-                  {% if categoria.produtos is defined and categoria.produtos|length > 0 %}
-                    <optgroup label="{{ categoria.nome }}">
-                      {% for produto in categoria.produtos %}
-                        {% if produto.status_geral == true %}
-                          <option value="{{ produto.idproduto_cardapio }}" data-preco="{{ produto.preco }}" data-preco-safe="{{ produto.preco_safe }}">{{ produto.nome }}</option>
-                        {% endif %}
-                      {% endfor %}
-                    </optgroup>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            </select>
+        <div class="modal-body">
+  
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" data-target=".saida_cardapio" id="chk_cardapio" name="chk_cardapio">
+            <label class="custom-control-label" for="chk_cardapio">Saída do cardápio</label>
           </div>
-          <div class="tab" style="display: none;" id="tab_produtos_movimentacao">
-            <ul class="nav nav-tabs" role="tablist">
-            </ul>
-            <div class="tab-content">
+  
+          <div class="saida_cardapio pt-3 mb-4" style="display: none;">
+            <div class="form-group">
+              <label>Produtos *</label>
+              <select class="form-control" name="produtos[]" multiple>
+                {% if produtos is defined %}
+                  {% for categoria in produtos %}
+                    {% if categoria.produtos is defined and categoria.produtos|length > 0 %}
+                      <optgroup label="{{ categoria.nome }}">
+                        {% for produto in categoria.produtos %}
+                          {% if produto.status_geral == true %}
+                            <option value="{{ produto.idproduto_cardapio }}" data-preco="{{ produto.preco }}" data-preco-safe="{{ produto.preco_safe }}">{{ produto.nome }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </optgroup>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </select>
+            </div>
+            <div class="tab m-0" style="display: none;" id="tab_produtos_movimentacao">
+              <ul class="nav nav-tabs" role="tablist">
+              </ul>
+              <div class="tab-content">
+              </div>
             </div>
           </div>
-        </div>
-
-        <hr class="my-3">
-        
-        <div class="form-group w-50">
-          <label>Valor *</label>
-          <div class="input-group m-0">
-            <div class="input-group-prepend">
-              <span class="input-group-text">R$</span>
-            </div>
-            <input name="descricao" type="text" class="form-control" required>
+  
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" data-target=".entradas_personalizadas" id="chk_personalizadas" name="chk_personalizadas">
+            <label class="custom-control-label" for="chk_personalizadas">Entradas personalizadas</label>
           </div>
+  
+          <div class="entradas_personalizadas pt-3" style="display: none;">
+            <div class="form-group">
+              <label>Entradas personalizadas *</label>
+              <div class="list">
+                
+                <div class="item novo">
+                  <div class="inputs">
+                    <div class="input-group m-0">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">R$</span>
+                      </div>
+                      <input type="text" placeholder="Valor" class="form-control">
+                    </div>
+                    <input type="text" class="form-control" placeholder="Descrição">
+                    <a href="#" class="btn btn-success btn-square"><i class="fas fa-plus"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" data-target=".enviar_arquivos" id="chk_arquivos" name="chk_arquivos">
+            <label class="custom-control-label" for="chk_arquivos">Enviar arquivos</label>
+          </div>
+  
+          <div class="enviar_arquivos pt-3" style="display: none;">
+            <div class="form-group">
+              <label>Arquivos *</label>
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="upload" name="upload[]" multiple>
+                  <label class="custom-file-label" for="upload" aria-describedby="inputGroupFileAddon02">Escolha pelo menos 1 arquivo</label>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+  
+          <hr class="my-3">
+          
+          <div class="form-group w-50 opacity-7 mb-0">
+            <label>Valor total *</label>
+            <div class="input-group m-0">
+              <div class="input-group-prepend">
+                <span class="input-group-text">R$</span>
+              </div>
+              <input name="total" type="text" class="form-control" readonly>
+            </div>
+          </div>
+          <small>* O valor é calculado automaticamente de acordo com os itens acima.</small>
+  
+          <div class="form-group mt-3">
+            <label>Descrição *</label>
+            <textarea class="form-control" rows="5" name="descricao_geral"></textarea>
+          </div>
+  
+          
+  
+          
+  
         </div>
-
-        <div class="form-group">
-          <label>Descrição *</label>
-          <textarea class="form-control" name="descricao"></textarea>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
-
-        
-
-        
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save</button>
-      </div>
+      </form>
     </div>
   </div>
 </div>
@@ -86,23 +133,126 @@
   });
 
   $(document).ready(function () {
-    $('#chk_cardapio').change(function () {
-      if ($(this).prop('checked') == true) {
-        $('.saida_cardapio').slideDown();
-      } else {
-        $('.saida_cardapio').slideUp();
+    const BRL_FROM_DB = value => currency(value, { symbol: 'R$ ', decimal: ',', separator: '.', fromCents: true });
+    const BRL_FROM_MASK = value => currency(value, { symbol: '', decimal: ',', separator: '.' });
+    const modal_entrada = $('#modalAddEntrada');
+
+    modal_entrada.on('add.updateValor', function () {
+      var valores = [];
+      // get valores produtos
+      if (modal_entrada.find('#chk_cardapio').prop('checked') === true) {
+        let produtos = modal_entrada.find('.saida_cardapio .tab .tab-content .tab-pane');
+        $.each(produtos, function (index, el) {
+          let val = $(el).find('small').text();
+          valores.push(val);
+        });
       }
+
+      if (modal_entrada.find('#chk_personalizadas').prop('checked') === true) {
+        let produtos = modal_entrada.find('.entradas_personalizadas .form-group .list .item:not(.novo)');
+        $.each(produtos, function (index, el) {
+          let val = $(el).find('div span').text();
+          valores.push(val);
+        });
+      }
+
+      var total = BRL_FROM_MASK('0');
+      if (valores.length > 0) {
+        for (let v of valores) {
+          v = v.split(' ');
+          v = BRL_FROM_MASK(v[1]);
+          total = total.add(v);
+        }
+      }
+
+      modal_entrada.find('input[name="total"]').val(total.format());
     })
 
-    $('#modelId').modal('show');
+    modal_entrada.modal('show');
 
-    $('[name="produtos[]"]').select2({
+    modal_entrada.find('.custom-control-input').change(function () {
+      let $this = $(this);
+      let target = $this.attr('data-target');
+      if ($this.prop('checked') == true) {
+        modal_entrada.find(target).slideDown();
+      } else {
+        modal_entrada.find(target).slideUp();
+      }
+      modal_entrada.trigger('add.updateValor');
+    });
+
+    modal_entrada.find('.entradas_personalizadas .list .item.novo input:eq(0)').mask('000.000.000.000.000,00', {reverse: true});
+
+    modal_entrada.find('.entradas_personalizadas .list .item.novo a').click(function () {
+      let valor = $(this).parent().find('input:eq(0)');
+      let desc = $(this).parent().find('input:eq(1)');
+      var container = modal_entrada.find('.entradas_personalizadas .list');
+      let count = container.find('.item:not(.novo)').length;
+
+      let html = `
+        <div class="item" style="display: none">
+          <div>
+            <span>R$ ${valor.val()}</span>
+            <p>${desc.val()}</p>
+            <input type="hidden" name="entrada[${count}][valor]" value="${valor.val()}">
+            <input type="hidden" name="entrada[${count}][desc]" value="${desc.val()}">
+          </div>
+          <a href="#" class="btn btn-danger btn-sm btn-square"><i class="fas fa-trash"></i></a>
+        </div>
+      `;
+
+      let e = $(html).insertBefore(container.find('.item.novo'));
+      e.slideDown(300, function () {
+        modal_entrada.trigger('add.updateValor');
+      });
+
+      valor.val('');
+      desc.val('');
+
+      e.find('a').click(function () {
+        let el = $(this).parent();
+        Swal.fire({ 
+          title: 'Remover item', 
+          icon: 'question', 
+          text: 'Você tem certeza que deseja remover este item?', 
+          showCancelButton: true, 
+          confirmButtonText: `Sim`, 
+          cancelButtonText: `Cancelar`, 
+        }).then((result) => { 
+          if (result.isConfirmed) { 
+            el.slideUp(300, function () {
+              el.remove();
+              modal_entrada.trigger('add.updateValor');
+            })
+          } 
+        }); 
+        
+      })
+    });
+
+    modal_entrada.find('input[name="upload[]"]').change(function () {
+      let files = $(this).prop('files');
+      let names = [];
+      for (let f of files) {
+        names.push(f.name);
+      }
+      let text = names.join(', ');
+      if (names.length > 2) {
+        text = 'Você selecionou ' + names.length + ' arquivos';
+      }
+      $(this).next().text(text);
+    })
+
+
+    modal_entrada.find('[name="produtos[]"]').select2({
       placeholder: 'Selecione um ou mais produtos'
     });
 
-    $('[name="produtos[]"]').change(function () {
+    modal_entrada.find('[name="produtos[]"]').change(function () {
       let produtos = $(this).find('option:checked');
-      let container = $('#tab_produtos_movimentacao');
+      let container = modal_entrada.find('#tab_produtos_movimentacao');
+
+      modal_entrada.trigger('add.updateValor');
 
       let tabs = [];
 
@@ -114,6 +264,9 @@
           let nome = $(produto).text();
           let preco = $(produto).attr('data-preco');
           let preco_safe = $(produto).attr('data-preco-safe');
+          preco = BRL_FROM_DB(preco_safe);
+          
+
           let html_li = `
             <li class="nav-item">
               <a class="nav-link" href="#tab_produto_${id}" data-toggle="tab">${nome}</a>
@@ -123,8 +276,8 @@
             <div class="tab-pane" id="tab_produto_${id}" role="tabpanel">
               <div class="form-group">
                 <label>Quantidade</label>
-                <input type="number" class="form-control" name="qnt[${id}]">
-                <small>${preco}</small>
+                <input type="number" class="form-control" value="1" name="qnt[${id}]">
+                <small>${preco.format()}</small>
               </div>
             </div>
           `;
@@ -132,9 +285,12 @@
           let li = $(html_li).appendTo(container.find('.nav'));
           let tab = $(html_tab).appendTo(container.find('.tab-content'));
 
-          tab.find('input[type="number"]').on('keyup change', function () {
+          modal_entrada.trigger('add.updateValor');
+
+          tab.find('input[type="number"]').on('change', function () {
             let qnt = $(this).val();
-            console.log(preco_safe, qnt);
+            $(this).next().text(preco.multiply(qnt).format());
+            modal_entrada.trigger('add.updateValor');
           });
   
           if (container.find('.nav li').length == 1) {
@@ -156,7 +312,31 @@
         }
         container.find(tabs[0]).addClass('active');
         container.find(`a[href="${tabs[0]}"]`).addClass('active');
+        modal_entrada.trigger('add.updateValor');
       }
     })
+  
+    var f1 = modal_entrada.find('#form_add_entrada');
+    var b1 = f1.find('.btn[type="submit"]');
+
+    b1.click(function() {
+      f1.ajaxForm({
+        beforeSend: function() {
+          b1.attr('disabled', 'disabled');
+        },
+        success: function(e) {
+          b1.removeAttr('disabled');
+          if (e.error == false) {
+            location.reload();
+          } else {
+            Swal.fire('Erro ao lançar movimentação', e.errors.join('<br>'), 'error');
+          }
+        },
+        error: function(e) {
+          b1.removeAttr('disabled');
+          console.log(e);
+        }
+      });
+    });
   })
 </script>

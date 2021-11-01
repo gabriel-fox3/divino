@@ -36,6 +36,7 @@
                                     {% for item in produto.info %}
                                       {% set medida = item.produto.medida|split(',') %}
                                       <li class="font-10 {{ item.status == false ? 'text-danger' : '' }}">{{ item.produto.nome }} - x {{ item.qnt  ~ ' ' ~ medida[1] }}</li>
+                                      {% set medida = null %}
                                     {% endfor %}
                                   {% endif %}
                                 </ul>
@@ -67,13 +68,16 @@
   <script>
 
     $(document).ready(function () {
-      $('.cardapio .categoria .status a').popover({
-        trigger: 'focus',
-        container: 'body',
-        content: $('.cardapio .categoria .status ul').prop("outerHTML"),
-        html: true,
-        placement: 'right',
-        title: 'Informações'
+      let items_table = $('.cardapio .categoria table tbody tr');
+      $.each(items_table, function (index, el) {
+        $(el).find('.status a').popover({
+          trigger: 'focus',
+          container: 'body',
+          content: $(el).find('.status ul').prop("outerHTML"),
+          html: true,
+          placement: 'right',
+          title: 'Informações'
+        })
       })
       
       $('.cardapio .categoria .collapse').on('hide.bs.collapse', function () {

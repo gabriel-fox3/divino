@@ -2,9 +2,17 @@
   min-width: 220px;
 }
 
+.opacity-7 {
+  opacity: .7;
+}
+
 body[data-theme="dark"] .modal-content {
   background-color: var(--dark);
   color: var(--light);
+}
+
+body[data-theme="dark"] .modal-content hr {
+  border-color: var(--light);
 }
 
 body[data-theme="dark"] .modal-content .modal-header,
@@ -17,10 +25,15 @@ body[data-theme="dark"] .modal-content .modal-header * {
 }
 
 body[data-theme="dark"] .modal-content .form-control,
+body[data-theme="dark"] .modal-content .custom-file-input + label,
 body[data-theme="dark"] .modal-content .select2-container--bootstrap4 .select2-selection {
   background-color: #d1d1d1;
   border-color: #d1d1d1;
   color: var(--light);
+}
+
+body[data-theme="dark"] .modal-content .custom-file-input + label::after {
+  content: "Procurar"!important
 }
 
 body[data-theme="dark"] .modal-content .custom-switch .custom-control-input:checked ~ .custom-control-label:after {

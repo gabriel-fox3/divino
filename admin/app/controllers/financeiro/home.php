@@ -7,12 +7,15 @@ class ControllerFinanceiroHome extends BaseController {
   public function index($data = null) {
 
     $this->document->addStyle('css/styles/financeiro');
+    $this->document->addScript('node_modules/currency.js/dist/currency.min');
 
     $data['produtos'] = $this->get_list();
     // echo "<pre>";
     //   print_r($data['produtos']);
     // echo "</pre>";
     // exit;
+
+    $data['action_add_entrada'] = $this->url->link('financeiro/home/add_entrada');
 
     $data['modal_entrada'] = $this->load->view('financeiro/entrada', $data);
 
@@ -67,5 +70,12 @@ class ControllerFinanceiroHome extends BaseController {
       }
     }
     return $categorias;
+  }
+
+  public function add_entrada() {
+    echo "<pre>";
+      print_r($this->request->post);
+    echo "</pre>";
+    
   }
 }
