@@ -73,9 +73,69 @@ class ControllerFinanceiroHome extends BaseController {
   }
 
   public function add_entrada() {
-    echo "<pre>";
-      print_r($this->request->post);
-    echo "</pre>";
+    if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+
+      echo "<pre>";
+        print_r($this->request->post);
+      echo "</pre>";
+      exit;
+
+      $this->load->model('financeiro/financeiro');
+      $errors = array();
+
+      $total = Money::of(0, 'BRL');
+
+      $financeiro = array(
+        'idusuario' => $this->user->getIdusuario(),
+        'joined' => date('Y-m-d H:i:s'),
+        'tipo' => 'entrada',
+        'valor' => '0',
+        'descricao' => $this->request->post['descricao_geral'],
+        'manual' => '1',
+        'obj' => array()
+      );
+
+      $obj = array();
+
+      $financeiro = $this->model_financeiro_financeiro->add($financeiro);
+   
+      // movimentacao estoque
+      if (isset($this->request->post['chk_cardapio']) && $this->request->post['chk_cardapio'] == 'on') {
+        $this->load->model('estoque/movimentacao');
+        $this->load->model('estoque/produto');
+        $this->load->model('cardapio/produto');
+  
+      
+        $produtos = $this->request->post['produtos'];
+
+
+  
+        if (sizeof($errors) > 0) {
+          $this->model_financeiro_financeiro->delete($financeiro['idfinanceiro']);
+          $this->response->json(array('error' => true, 'errors' => $errors));
+          exit;
+        }
+  
+        $movimentacao['obj'] = json_encode($movimentacao['obj']);
+        $movimentacao['produtos'] = json_encode($movimentacao['produtos']);
+
+        
+        $movimentacao = $this->model_estoque_movimentacao->add($movimentacao);
+        
+        $obj['cardapio'] = $movimentacao;
+        
+        $this->log->save('add_financeiro_movimentacao_estoque', array(
+          'new' => serialize($movimentacao),
+        ));
+
+      }
+
+      if (isset($this->request->post['chk_personalizadas']) && $this->request->post['chk_personalizadas'] == 'on') {
+        foreach ($this->request->post['entrada'] as $entrada) {
+          
+        }
+      }
+    }
     
   }
 }
