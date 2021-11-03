@@ -1,10 +1,10 @@
 <!-- Modal -->
-<div class="modal fade" id="modalAddEntrada" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+<div class="modal fade" id="modalAddSaida" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form id="form_add_entrada" action="{{ action_add_entrada }}" method="post" enctype="multipart/form-data">
+      <form id="form_add_saida" action="{{ action_add_saida }}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
-          <h5 class="modal-title">Lançar entrada no financeiro</h5>
+          <h5 class="modal-title">Lançar saída no financeiro</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -12,22 +12,20 @@
         <div class="modal-body">
   
           <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" data-target=".saida_cardapio" id="chk_cardapio" name="chk_cardapio">
-            <label class="custom-control-label" for="chk_cardapio">Saída do cardápio</label>
+            <input type="checkbox" class="custom-control-input" data-target=".entrada_estoque" id="chk_estoque" name="chk_estoque">
+            <label class="custom-control-label" for="chk_estoque">Entrada no estoque</label>
           </div>
   
-          <div class="saida_cardapio pt-3 mb-4" style="display: none;">
+          <div class="entrada_estoque pt-3 mb-4" style="display: none;">
             <div class="form-group">
               <label>Produtos *</label>
-              <select class="form-control" name="produtos[]" multiple>
-                {% if produtos is defined %}
-                  {% for categoria in produtos %}
+              <select class="form-control" name="produtos_saida[]" multiple>
+                {% if produtos_estoque is defined %}
+                  {% for categoria in produtos_estoque %}
                     {% if categoria.produtos is defined and categoria.produtos|length > 0 %}
                       <optgroup label="{{ categoria.nome }}">
                         {% for produto in categoria.produtos %}
-                          {% if produto.status_geral == true %}
-                            <option value="{{ produto.idproduto_cardapio }}" data-preco="{{ produto.preco }}" data-preco-safe="{{ produto.preco_safe }}">{{ produto.nome }}</option>
-                          {% endif %}
+                          <option value="{{ produto.idproduto }}" data-medida="{{ produto.medida }}">{{ produto.nome }}</option>
                         {% endfor %}
                       </optgroup>
                     {% endif %}
@@ -35,7 +33,7 @@
                 {% endif %}
               </select>
             </div>
-            <div class="tab m-0" style="display: none;" id="tab_produtos_movimentacao">
+            <div class="tab m-0" style="display: none;" id="tab_produtos_movimentacao_saida">
               <ul class="nav nav-tabs" role="tablist">
               </ul>
               <div class="tab-content">
@@ -44,13 +42,13 @@
           </div>
   
           <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" data-target=".entradas_personalizadas" id="chk_personalizadas" name="chk_personalizadas">
-            <label class="custom-control-label" for="chk_personalizadas">Entradas personalizadas</label>
+            <input type="checkbox" class="custom-control-input" data-target=".saidas_personalizadas" id="chk_saidas_personalizadas" name="chk_saidas_personalizadas">
+            <label class="custom-control-label" for="chk_saidas_personalizadas">Saídas personalizadas</label>
           </div>
   
-          <div class="entradas_personalizadas pt-3" style="display: none;">
+          <div class="saidas_personalizadas pt-3" style="display: none;">
             <div class="form-group">
-              <label>Entradas personalizadas *</label>
+              <label>Saídas personalizadas *</label>
               <div class="list">
                 
                 <div class="item novo">
@@ -70,17 +68,17 @@
           </div>
   
           <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" data-target=".enviar_arquivos" id="chk_arquivos" name="chk_arquivos">
-            <label class="custom-control-label" for="chk_arquivos">Enviar arquivos</label>
+            <input type="checkbox" class="custom-control-input" data-target=".enviar_arquivos_saida" id="chk_arquivos_saida" name="chk_arquivos_saida">
+            <label class="custom-control-label" for="chk_arquivos_saida">Enviar arquivos</label>
           </div>
   
-          <div class="enviar_arquivos pt-3" style="display: none;">
+          <div class="enviar_arquivos_saida pt-3" style="display: none;">
             <div class="form-group">
               <label>Arquivos *</label>
               <div class="input-group mb-3">
                 <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="upload" name="upload[]" multiple>
-                  <label class="custom-file-label" for="upload" aria-describedby="inputGroupFileAddon02">Escolha pelo menos 1 arquivo</label>
+                  <input type="file" class="custom-file-input" id="upload_saida" name="upload_saida[]" multiple>
+                  <label class="custom-file-label" for="upload_saida" aria-describedby="inputGroupFileAddon02">Escolha pelo menos 1 arquivo</label>
                 </div>
               </div>
             </div>
@@ -124,21 +122,22 @@
   $(document).ready(function () {
     const BRL_FROM_DB = value => currency(value, { symbol: 'R$ ', decimal: ',', separator: '.', fromCents: true });
     const BRL_FROM_MASK = value => currency(value, { symbol: '', decimal: ',', separator: '.' });
-    const modal_entrada = $('#modalAddEntrada');
+    const modal_saida = $('#modalAddSaida');
 
-    modal_entrada.on('add.updateValor', function () {
+    modal_saida.on('sub.updateValor', function () {
       var valores = [];
       // get valores produtos
-      if (modal_entrada.find('#chk_cardapio').prop('checked') === true) {
-        let produtos = modal_entrada.find('.saida_cardapio .tab .tab-content .tab-pane');
+      if (modal_saida.find('#chk_estoque').prop('checked') === true) {
+        let produtos = modal_saida.find('.entrada_estoque .tab .tab-content .tab-pane');
         $.each(produtos, function (index, el) {
-          let val = $(el).find('small').text();
+          let val = $(el).find('input:eq(1)').val();
+          val = 'R$ ' + val;
           valores.push(val);
         });
       }
 
-      if (modal_entrada.find('#chk_personalizadas').prop('checked') === true) {
-        let produtos = modal_entrada.find('.entradas_personalizadas .form-group .list .item:not(.novo)');
+      if (modal_saida.find('#chk_saidas_personalizadas').prop('checked') === true) {
+        let produtos = modal_saida.find('.saidas_personalizadas .form-group .list .item:not(.novo)');
         $.each(produtos, function (index, el) {
           let val = $(el).find('div span').text();
           valores.push(val);
@@ -154,26 +153,26 @@
         }
       }
 
-      modal_entrada.find('input[name="total"]').val(total.format());
+      modal_saida.find('input[name="total"]').val(total.format());
     })
 
-    modal_entrada.find('.custom-control-input').change(function () {
+    modal_saida.find('.custom-control-input').change(function () {
       let $this = $(this);
       let target = $this.attr('data-target');
       if ($this.prop('checked') == true) {
-        modal_entrada.find(target).slideDown();
+        modal_saida.find(target).slideDown();
       } else {
-        modal_entrada.find(target).slideUp();
+        modal_saida.find(target).slideUp();
       }
-      modal_entrada.trigger('add.updateValor');
+      modal_saida.trigger('sub.updateValor');
     });
 
-    modal_entrada.find('.entradas_personalizadas .list .item.novo input:eq(0)').mask('000.000.000.000.000,00', {reverse: true});
+    modal_saida.find('.saidas_personalizadas .list .item.novo input:eq(0)').mask('000.000.000.000.000,00', {reverse: true});
 
-    modal_entrada.find('.entradas_personalizadas .list .item.novo a').click(function () {
+    modal_saida.find('.saidas_personalizadas .list .item.novo a').click(function () {
       let valor = $(this).parent().find('input:eq(0)');
       let desc = $(this).parent().find('input:eq(1)');
-      var container = modal_entrada.find('.entradas_personalizadas .list');
+      var container = modal_saida.find('.saidas_personalizadas .list');
       let count = container.find('.item:not(.novo)').length;
 
       let html = `
@@ -181,8 +180,8 @@
           <div>
             <span>R$ ${valor.val()}</span>
             <p>${desc.val()}</p>
-            <input type="hidden" name="entrada[${count}][valor]" value="${valor.val()}">
-            <input type="hidden" name="entrada[${count}][desc]" value="${desc.val()}">
+            <input type="hidden" name="saida[${count}][valor]" value="${valor.val()}">
+            <input type="hidden" name="saida[${count}][desc]" value="${desc.val()}">
           </div>
           <a href="#" class="btn btn-danger btn-sm btn-square"><i class="fas fa-trash"></i></a>
         </div>
@@ -190,7 +189,7 @@
 
       let e = $(html).insertBefore(container.find('.item.novo'));
       e.slideDown(300, function () {
-        modal_entrada.trigger('add.updateValor');
+        modal_saida.trigger('sub.updateValor');
       });
 
       valor.val('');
@@ -209,7 +208,7 @@
           if (result.isConfirmed) { 
             el.slideUp(300, function () {
               el.remove();
-              modal_entrada.trigger('add.updateValor');
+              modal_saida.trigger('sub.updateValor');
             })
           } 
         }); 
@@ -217,7 +216,7 @@
       })
     });
 
-    modal_entrada.find('input[name="upload[]"]').change(function () {
+    modal_saida.find('input[name="upload_saida[]"]').change(function () {
       let files = $(this).prop('files');
       let names = [];
       for (let f of files) {
@@ -231,15 +230,15 @@
     })
 
 
-    modal_entrada.find('[name="produtos[]"]').select2({
+    modal_saida.find('[name="produtos_saida[]"]').select2({
       placeholder: 'Selecione um ou mais produtos'
     });
 
-    modal_entrada.find('[name="produtos[]"]').change(function () {
+    modal_saida.find('[name="produtos_saida[]"]').change(function () {
       let produtos = $(this).find('option:checked');
-      let container = modal_entrada.find('#tab_produtos_movimentacao');
+      let container = modal_saida.find('#tab_produtos_movimentacao_saida');
 
-      modal_entrada.trigger('add.updateValor');
+      modal_saida.trigger('sub.updateValor');
 
       let tabs = [];
 
@@ -249,9 +248,8 @@
 
         if ($(container.find(`.nav a[href="#tab_produto_${id}"]`)).length == 0) {
           let nome = $(produto).text();
-          let preco = $(produto).attr('data-preco');
-          let preco_safe = $(produto).attr('data-preco-safe');
-          preco = BRL_FROM_DB(preco_safe);
+          let medida = $(produto).attr('data-medida');
+          medida = medida.split(',');
           
 
           let html_li = `
@@ -261,10 +259,26 @@
           `;
           let html_tab = `
             <div class="tab-pane" id="tab_produto_${id}" role="tabpanel">
-              <div class="form-group">
-                <label>Quantidade</label>
-                <input type="number" autocomplete="off" class="form-control" value="1" name="qnt[${id}]">
-                <small>${preco.format()}</small>
+              <div class="row">
+                <div class="col">
+                  <label>Quantidade</label>
+                  <div class="input-group m-0">
+                    <input autocomplete="off" name="qnt[${id}]" type="text" class="form-control">
+                    <div class="input-group-append">
+                      <span class="input-group-text">${medida[1]}</span>
+                    </div>
+                  </div>
+                  <small>Produto separado em ${medida[0]}</small>
+                </div>
+                <div class="col">
+                  <label>Valor pago</label>
+                  <div class="input-group m-0">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">R$</span>
+                    </div>
+                    <input autocomplete="off" name="valor[${id}]" type="text" class="form-control">
+                  </div>
+                </div>
               </div>
             </div>
           `;
@@ -272,12 +286,12 @@
           let li = $(html_li).appendTo(container.find('.nav'));
           let tab = $(html_tab).appendTo(container.find('.tab-content'));
 
-          modal_entrada.trigger('add.updateValor');
+          tab.find(`input[name="valor[${id}]"]`).mask('000.000.000.000.000,00', {reverse: true});
 
-          tab.find('input[type="number"]').on('change', function () {
-            let qnt = $(this).val();
-            $(this).next().text(preco.multiply(qnt).format());
-            modal_entrada.trigger('add.updateValor');
+          modal_saida.trigger('sub.updateValor');
+
+          tab.find(`input[name="valor[${id}]"]`).on('change', function () {
+            modal_saida.trigger('sub.updateValor');
           });
   
           if (container.find('.nav li').length == 1) {
@@ -299,11 +313,11 @@
         }
         container.find(tabs[0]).addClass('active');
         container.find(`a[href="${tabs[0]}"]`).addClass('active');
-        modal_entrada.trigger('add.updateValor');
+        modal_saida.trigger('sub.updateValor');
       }
     })
   
-    var f1 = modal_entrada.find('#form_add_entrada');
+    var f1 = modal_saida.find('#form_add_saida');
     var b1 = f1.find('.btn[type="submit"]');
 
     b1.click(function() {

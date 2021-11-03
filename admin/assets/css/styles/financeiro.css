@@ -33,7 +33,8 @@
   color: var(--info);
 }
 
-#modalAddEntrada .entradas_personalizadas .list {
+#modalAddEntrada .entradas_personalizadas .list,
+#modalAddSaida .saidas_personalizadas .list {
   background-color: #fff;
   display: flex;
   justify-content: center;
@@ -41,7 +42,8 @@
   flex-direction: column;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item {
+#modalAddEntrada .entradas_personalizadas .list .item,
+#modalAddSaida .saidas_personalizadas .list .item {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -51,35 +53,43 @@
 }
 
 #modalAddEntrada .entradas_personalizadas .list .item:nth-last-child(2),
-#modalAddEntrada .entradas_personalizadas .list .item.novo {
+#modalAddSaida .saidas_personalizadas .list .item:nth-last-child(2),
+#modalAddEntrada .entradas_personalizadas .list .item.novo,
+#modalAddSaida .saidas_personalizadas .list .item.novo {
   border: 0;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item > div span {
+#modalAddEntrada .entradas_personalizadas .list .item > div span,
+#modalAddSaida .saidas_personalizadas .list .item > div span {
   font-weight: 900;
   font-size: 14px;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item > div p {
+#modalAddEntrada .entradas_personalizadas .list .item > div p,
+#modalAddSaida .saidas_personalizadas .list .item > div p {
   margin: 0;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item.novo {
+#modalAddEntrada .entradas_personalizadas .list .item.novo,
+#modalAddSaida .saidas_personalizadas .list .item.novo {
   background: #ddd;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs {
+#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs,
+#modalAddSaida .saidas_personalizadas .list .item.novo .inputs {
   width: 100%;
   display: flex;
   align-items: center;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs input {
+#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs input,
+#modalAddSaida .saidas_personalizadas .list .item.novo .inputs input {
   background-color: #fff;
   border-color: #fff;
   margin-right: 5px;
 }
 
-#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs .input-group {
+#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs .input-group,
+#modalAddSaida .saidas_personalizadas .list .item.novo .inputs .input-group {
   width: 40%;
 }
