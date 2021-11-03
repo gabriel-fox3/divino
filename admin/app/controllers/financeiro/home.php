@@ -250,6 +250,13 @@ class ControllerFinanceiroHome extends BaseController {
                 $valor_diminuir_produto = (float)$info['qnt'] * $qnt;
                 $produtos_estoque[] = $idp;
                 $qnt_estoque[$idp] = $valor_diminuir_produto;
+                
+                if ($valor_diminuir_produto > (float)$produto_estoque['qnt_atual']) {
+                  $errors[] = 'A quantidade desejada para o produto ' . $produto_cardapio['nome'] . ' não está disponível.';
+                  $this->model_financeiro_financeiro->delete($financeiro['idfinanceiro']);
+                  $this->response->json(array('error' => true, 'errors' => $errors));
+                  exit;
+                }
 
                 $produto_estoque['qnt_atual'] = (float)$produto_estoque['qnt_atual'] - (float)$valor_diminuir_produto;
 
@@ -301,9 +308,9 @@ class ControllerFinanceiroHome extends BaseController {
             'valor' => $valor
           );
         }
+        $obj['entradas'] = $entradas_personalizadas;
       }
 
-      $obj['entradas'] = $entradas_personalizadas;
       $financeiro['valor'] = $total->getMinorAmount()->toInt();
       $financeiro['obj'] = json_encode($obj);
 
