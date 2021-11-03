@@ -10,15 +10,25 @@ class ControllerFinanceiroHome extends BaseController {
     $this->document->addStyle('css/styles/financeiro');
     $this->document->addScript('node_modules/currency.js/dist/currency.min');
 
+    $data['meses'] = array();
+    for ($i=1; $i<13; $i++) {
+      $data['meses'][] = array(
+        'num'=>$i,
+        'txt'=>$this->func->getMes($i)
+      );
+    }
+
+    $filtro = array(
+      'mes' => isset($this->request->get['mes']) && $this->request->get['mes'] !== '' ? $this->request->get['mes'] : array(date('m')),
+      'entradas' => (isset($this->request->get['mes']) && !isset($this->request->get['entradas'])) ? false : true,
+      'saidas' => (isset($this->request->get['mes']) && !isset($this->request->get['saidas'])) ? false : true
+    );
+
+    $data['filtro'] = $filtro;
+
     $data['produtos'] = $this->get_list_produtos_cardapio();
     $data['produtos_estoque'] = $this->get_list_produtos_estoque();
-    $data['movimentacoes'] = $this->get_list();
-    // echo "<pre>";
-    //   print_r($data['produtos_estoque']);
-    // echo "</pre>";
-    // exit;
-
-    // LISTEI OS PRODUTOS NO SELECT DO MODAL addSaida, MODIFICAR O tab_content PARA PEDIR QUANTIDADE E VALOR PAGO NO PRODUTO
+    $data['movimentacoes'] = $this->get_list($filtro);
 
     $data['action_add_entrada'] = $this->url->link('financeiro/home/add_entrada');
     $data['action_add_saida'] = $this->url->link('financeiro/home/add_saida');
@@ -35,7 +45,7 @@ class ControllerFinanceiroHome extends BaseController {
     $this->response->setOutput($this->load->view('financeiro/list', $data));
   }
 
-  public function get_list() {
+  public function get_list($filtro = array()) {
     if ($this->request->server['REQUEST_METHOD'] == 'GET') {
       $this->load->model('cardapio/categoria_cardapio');
       $this->load->model('cardapio/produto_cardapio');
@@ -43,7 +53,7 @@ class ControllerFinanceiroHome extends BaseController {
       $this->load->model('financeiro/financeiro');
       $this->load->model('usuario/usuario');
 
-      $movimentacoes = $this->model_financeiro_financeiro->getAll();
+      $movimentacoes = $this->model_financeiro_financeiro->getAll($filtro['mes']);
       
       $saldos = array(
         'total' => Money::of('0', 'BRL'),
@@ -51,8 +61,23 @@ class ControllerFinanceiroHome extends BaseController {
         'saidas' => Money::of('0', 'BRL')
       );
 
+      $arr_movimentacoes = array();
+
       if (sizeof($movimentacoes) > 0) {
         foreach($movimentacoes as $i => $financeiro) {
+
+
+          $run = false;
+          if ($financeiro['tipo'] == 'entrada' && $filtro['entradas'] == true) {
+            $run = true;
+          } else if ($financeiro['tipo'] == 'saida' && $filtro['saidas'] == true) {
+            $run = true;
+          }
+
+          if ($run == false) {
+            continue;
+          }
+
           $financeiro['valor'] = Money::ofMinor($financeiro['valor'], 'BRL');
           $financeiro['obj'] = json_decode($financeiro['obj'], true);
           
@@ -67,7 +92,7 @@ class ControllerFinanceiroHome extends BaseController {
           $financeiro['joined'] = DateTime::createFromFormat('Y-m-d H:i:s', $financeiro['joined'])->format('d/m/Y \à\s H:i:s');
           $financeiro['usuario'] = $this->model_usuario_usuario->getByid($financeiro['idusuario']);
 
-          $movimentacoes[$i] = $financeiro;
+          $arr_movimentacoes[] = $financeiro;
         }
       }
 
@@ -79,12 +104,12 @@ class ControllerFinanceiroHome extends BaseController {
         'saidas' => $saldos['saidas']->formatTo('pt_BR')
       );
 
-      $movimentacoes = array(
-        'movimentacoes' => $movimentacoes,
+      $arr_movimentacoes = array(
+        'movimentacoes' => $arr_movimentacoes,
         'saldos' => $saldos
       );
 
-      return $movimentacoes;
+      return $arr_movimentacoes;
     }
   }
 

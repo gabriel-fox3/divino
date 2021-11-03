@@ -5,13 +5,25 @@ use DateTime;
 use Mubbi\BaseModel;
 
 class ModelFinanceiroFinanceiro extends BaseModel{
-  public function getAll($ativos = false) {
+  public function getAll($filtro_mes = null) {
     $w = array();
+    if ($filtro_mes !== null) {
+      if (is_array($filtro_mes)) {
+        $tmp = array();
+        foreach ($filtro_mes as $mes) {
+          $mes = (int)$mes > 9 ? $mes : '0' . $mes;
+          $tmp[] = sprintf('joined LIKE "%s"', '%' . $mes . '%');
+        }
+        $w[] = '(' . implode(' OR ', $tmp) . ')';
+      }
+    }
+
     $q = sprintf('SELECT * FROM financeiro');
 
     if (sizeof($w) > 0) {
       $q .= ' WHERE ' . implode(' AND ', $w);
     }
+
     return $this->db->query($q)->rows;
   }
 
