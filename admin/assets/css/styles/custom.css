@@ -6,6 +6,11 @@
   opacity: .7;
 }
 
+.font-18,
+.font-18 * {
+  font-size: 18px;
+}
+
 body[data-theme="dark"] .modal-content {
   background-color: var(--dark);
   color: var(--light);
@@ -49,18 +54,18 @@ body[data-theme="dark"] .modal-content .tab .tab-content {
   background-color: #fff;
 }
 
-body[data-theme="dark"] .modal-content .tab .tab-content .h1, 
-body[data-theme="dark"] .modal-content .tab .tab-content .h2, 
-body[data-theme="dark"] .modal-content .tab .tab-content .h3, 
-body[data-theme="dark"] .modal-content .tab .tab-content .h4, 
-body[data-theme="dark"] .modal-content .tab .tab-content .h5, 
-body[data-theme="dark"] .modal-content .tab .tab-content .h6, 
-body[data-theme="dark"] .modal-content .tab .tab-content h1, 
-body[data-theme="dark"] .modal-content .tab .tab-content h2, 
-body[data-theme="dark"] .modal-content .tab .tab-content h3, 
-body[data-theme="dark"] .modal-content .tab .tab-content h4, 
-body[data-theme="dark"] .modal-content .tab .tab-content h5, 
-body[data-theme="dark"] .modal-content .tab .tab-content h6 {
+body[data-theme="dark"] .modal-content .h1, 
+body[data-theme="dark"] .modal-content .h2, 
+body[data-theme="dark"] .modal-content .h3, 
+body[data-theme="dark"] .modal-content .h4, 
+body[data-theme="dark"] .modal-content .h5, 
+body[data-theme="dark"] .modal-content .h6, 
+body[data-theme="dark"] .modal-content h1, 
+body[data-theme="dark"] .modal-content h2, 
+body[data-theme="dark"] .modal-content h3, 
+body[data-theme="dark"] .modal-content h4, 
+body[data-theme="dark"] .modal-content h5, 
+body[data-theme="dark"] .modal-content h6 {
   color: #293042
 }
 

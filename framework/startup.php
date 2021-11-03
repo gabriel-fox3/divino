@@ -3,11 +3,17 @@
 
 namespace Mubbi;
 
+use Brick\Money\Money;
 use DateTime;
 use User\User;
 
+
 // CUSTOM FUNCTIONS
 $custom_functions = array(
+  'twig_toMoney' => function ($str, $format = 'pt_BR') {
+    $money = Money::ofMinor($str, 'BRL');
+    return $money->formatTo($format);
+  },
   'json_decode' => function ($str, $returnAsClass = false) {
     $str = stripslashes(html_entity_decode($str));
     $ret = json_decode($str, $returnAsClass);   

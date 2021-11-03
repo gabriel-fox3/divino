@@ -36,6 +36,7 @@ class ControllerFinanceiroHome extends BaseController {
     $data['modal_entrada'] = $this->load->view('financeiro/entrada', $data);
     $data['modal_saida'] = $this->load->view('financeiro/saida', $data);
 
+    $data['url_get_detalhes'] = $this->url->link('financeiro/home/get_detalhes');
 
     $data['sidebar'] = $this->load->controller('common/sidebar', $data);
     $data['navbar'] = $this->load->controller('common/navbar', $data);
@@ -208,6 +209,8 @@ class ControllerFinanceiroHome extends BaseController {
         $this->load->model('estoque/movimentacao');
         $this->load->model('estoque/produto');
         $this->load->model('cardapio/produto_cardapio');
+
+        $saidas_cardapio = array();
   
         $movimentacao_estoque = array(
           'lancar' => 'saida',
@@ -231,6 +234,8 @@ class ControllerFinanceiroHome extends BaseController {
             }
 
             $qnt = (int)$this->request->post['qnt'][$idproduto];
+            if (!isset($saidas_cardapio[$idproduto])) $saidas_cardapio[$idproduto] = 0;
+            $saidas_cardapio[$idproduto] += $qnt;
 
             $preco = Money::ofMinor($produto_cardapio['preco'], 'BRL');
             $preco = $preco->multipliedBy($qnt);
@@ -276,6 +281,7 @@ class ControllerFinanceiroHome extends BaseController {
 
         
         $obj['cardapio'] = $movimentacao_estoque;
+        $obj['qnt_cardapio'] = $saidas_cardapio;
         
 
       }
@@ -346,29 +352,34 @@ class ControllerFinanceiroHome extends BaseController {
         $movimentacao['lancar'] = 'entrada';
         $movimentacao['descricao'] = 'Movimentação financeira #' . $financeiro['idfinanceiro'];
         $movimentacao['produtos'] = $this->request->post['produtos_saida'];
-        $movimentacao['obj'] = $this->request->post['qnt'];
+        $movimentacao['obj'] = array(
+          'qnt' => $this->request->post['qnt'],
+          'valor' => $this->request->post['valor']
+        );
   
         if (sizeof($movimentacao['produtos']) > 0) {
           foreach($movimentacao['produtos'] as $idproduto) {
             $produto = $this->model_estoque_produto->getById($idproduto);
             $produto_old = $produto;
   
-            if (!isset($movimentacao['obj'][$idproduto]) || $movimentacao['obj'][$idproduto] == '' || (float)$movimentacao['obj'][$idproduto] == 0) {
+            if (!isset($movimentacao['obj']['qnt'][$idproduto]) || $movimentacao['obj']['qnt'][$idproduto] == '' || (float)$movimentacao['obj']['qnt'][$idproduto] == 0) {
               $errors[] = 'Informe a quantidade de ' . $movimentacao['lancar'] . ' de <b>' . $produto['nome'] . '</b>.';
               continue;
             }   
 
-            if (!isset($this->request->post['valor'][$idproduto]) || $this->request->post['valor'][$idproduto] == '' || (float)$this->request->post['valor'][$idproduto] == 0) {
+            if (!isset($movimentacao['obj']['valor'][$idproduto]) || $movimentacao['obj']['valor'][$idproduto] == '' || (float)$movimentacao['obj']['valor'][$idproduto] == 0) {
               $errors[] = 'Informe o valor gasto no produto <b>' . $produto['nome'] . '</b>.';
               continue;
             }   
   
-            $produto['qnt_atual'] = (float)$produto['qnt_atual'] + (float)$movimentacao['obj'][$idproduto];
+            $produto['qnt_atual'] = (float)$produto['qnt_atual'] + (float)$movimentacao['obj']['qnt'][$idproduto];
 
-            $valor = str_replace('.', '', $this->request->post['valor'][$idproduto]);
+            $valor = str_replace('.', '', $movimentacao['obj']['valor'][$idproduto]);
             $valor = str_replace(',', '.', $valor);
             $valor = Money::of($valor, 'BRL');
             $total = $total->plus($valor);
+
+            $movimentacao['obj']['valor'][$idproduto] = $valor->getMinorAmount()->toInt();
 
             $produto = $this->model_estoque_produto->save($produto);
             $this->log->save('financeiro_movimentacao_edit_qnt_produto', array(
@@ -412,19 +423,79 @@ class ControllerFinanceiroHome extends BaseController {
             'valor' => $valor
           );
         }
+        $obj['saidas'] = $saidas_personalizadas;
       }
 
-      $obj['saidas'] = $saidas_personalizadas;
       $financeiro['valor'] = $total->getMinorAmount()->toInt();
       $financeiro['obj'] = json_encode($obj);
 
       $financeiro = $this->model_financeiro_financeiro->save($financeiro);
-      // $this->log->save('add_financeiro', array(
-      //   'new' => serialize($financeiro),
-      // ));
+      $this->log->save('add_financeiro', array(
+        'new' => serialize($financeiro),
+      ));
 
       $this->response->json(array('error' => false));
     }
     
+  }
+
+  public function get_detalhes() {
+    $this->load->model('financeiro/financeiro');
+    if ($this->request->server['REQUEST_METHOD'] == 'GET') {
+      $this->load->model('usuario/usuario');
+      
+      
+      $data = array();
+      $data['movimentacao'] = $this->model_financeiro_financeiro->getById($this->request->get['id']);
+      $data['movimentacao']['valor'] = Money::ofMinor($data['movimentacao']['valor'], 'BRL')->formatTo('pt_BR');
+      $data['movimentacao']['usuario'] = $this->model_usuario_usuario->getById($data['movimentacao']['idusuario']);
+      $data['movimentacao']['joined'] = DateTime::createFromFormat('Y-m-d H:i:s', $data['movimentacao']['joined'])->format('d/m/Y \à\s H:i:s');
+      $data['movimentacao']['obj'] = json_decode($data['movimentacao']['obj'], true);
+      
+      
+      if (isset($data['movimentacao']['obj']['cardapio'])) {
+        $this->load->model('cardapio/produto_cardapio');
+        $produtos = array();
+
+        if (sizeof($data['movimentacao']['obj']['qnt_cardapio']) > 0) {
+          foreach($data['movimentacao']['obj']['qnt_cardapio'] as $idproduto => $qnt) {
+            $p = $this->model_cardapio_produto_cardapio->getById($idproduto);
+            $valor = Money::ofMinor($p['preco'], 'BRL');
+            $valor = $valor->multipliedBy((int)$qnt);
+            $produtos[] = array(
+              'produto' => $p,
+              'qnt' => $qnt,
+              'valor' => $valor->formatTo('pt_BR')
+            );
+          }
+        }
+  
+        $data['movimentacao']['produtos'] = $produtos;
+      }
+
+      
+      if (isset($data['movimentacao']['obj']['estoque'])) {
+        $this->load->model('estoque/produto');
+        $produtos = array();
+        
+        $data['movimentacao']['obj']['estoque']['obj'] = json_decode($data['movimentacao']['obj']['estoque']['obj'], true);
+
+        if (sizeof($data['movimentacao']['obj']['estoque']['obj']['qnt']) > 0) {
+          foreach($data['movimentacao']['obj']['estoque']['obj']['qnt'] as $idproduto => $qnt) {
+            $p = $this->model_estoque_produto->getById($idproduto);
+            $valor = Money::ofMinor($data['movimentacao']['obj']['estoque']['obj']['valor'][$idproduto], 'BRL');
+            $produtos[] = array(
+              'produto' => $p,
+              'qnt' => $qnt,
+              'valor' => $valor->formatTo('pt_BR')
+            );
+          }
+        }
+
+        $data['movimentacao']['produtos'] = $produtos;
+      }
+
+      $this->response->json(array('result' => $this->load->view('financeiro/detalhes', $data)));
+    }
   }
 }

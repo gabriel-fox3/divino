@@ -4893,18 +4893,18 @@ a.badge-dark:focus {
 }
 .list-group-item-action {
   width: 100%;
-  color: #bfc1c6;
+  /* color: #bfc1c6; */
   text-align: inherit;
 }
 .list-group-item-action:focus,
 .list-group-item-action:hover {
   z-index: 1;
-  color: #bfc1c6;
+  /* color: #bfc1c6; */
   text-decoration: none;
   background-color: #3e4555;
 }
 .list-group-item-action:active {
-  color: #a9acb3;
+  /* color: #a9acb3; */
   background-color: #545968;
 }
 .list-group-item {

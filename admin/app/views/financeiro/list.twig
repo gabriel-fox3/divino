@@ -126,7 +126,7 @@
                     <td class="text-center">{{ financeiro.joined }}</td>
                     <td class="text-center">{{ financeiro.usuario.nome }}</td>
                     <td class="text-center">
-                      <a href="#" class="btn btn-info btn-square"><i class="fas fa-info"></i></a>
+                      <a href="javascript:;" class="btn btn-info btn-square btn_detalhes" data-id="{{ financeiro.idfinanceiro }}"><i class="fas fa-info"></i></a>
                     </td>
                   </tr>
                 {% endfor %}
@@ -148,7 +148,19 @@
 
   $(document).ready(function () {
     $('select[name="mes[]"]').select2();
-  })
+
+    $('.btn_detalhes').click(function () {
+      let id = $(this).attr('data-id');
+      $.get('{{ url_get_detalhes }}', { id }, function (res) {
+        let e = $(res.result).appendTo('#painel .main');
+        $(e).find('#modalDetalhes').modal('show');
+
+        $(e).find('#modalDetalhes').on('hidden.bs.modal', function () {
+          e.remove();
+        })
+      }); 
+    })
+  });
 
 </script>
 

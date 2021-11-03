@@ -93,3 +93,9 @@
 #modalAddSaida .saidas_personalizadas .list .item.novo .inputs .input-group {
   width: 40%;
 }
+
+
+#modalDetalhes .list-group-item {
+  background-color: #d7d7d7;
+  border-color: #d7d7d7;
+}
