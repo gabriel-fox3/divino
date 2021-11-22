@@ -5,19 +5,19 @@ define('USE_SSL', false);
 
 // define('HTTP_SERVER', 'http://localhost/live/divinos/admin/');
 // define('HTTPS_SERVER', 'https://localhost/live/divinos/admin/');
-define('HTTP_SERVER', 'http://192.240.118.114/divinos/admin/');
-define('HTTPS_SERVER', 'https://192.240.118.114/divinos/admin/');
+define('HTTP_SERVER', 'http://rep.fox3.com.br/divinos/admin/');
+define('HTTPS_SERVER', 'https://rep.fox3.com.br/divinos/admin/');
 
 define('OLD_SERVER', 'http://beto.fox3.com.br/beto-v2/');
 
 if (USE_SSL == true) {
-  define('UPLOADS', 'http://192.240.118.114/divinos/framework/storage/uploads/');
-  define('DEFAULT_IMG_USER', 'http://192.240.118.114/divinos/assets/img/default-avatar.png');
-  define('DEFAULT_NO_PHOTO', 'http://192.240.118.114/divinos/assets/img/no_photo.png');
+  define('UPLOADS', 'http://rep.fox3.com.br/divinos/framework/storage/uploads/');
+  define('DEFAULT_IMG_USER', 'http://rep.fox3.com.br/divinos/assets/img/default-avatar.png');
+  define('DEFAULT_NO_PHOTO', 'http://rep.fox3.com.br/divinos/assets/img/no_photo.png');
 } else {
-  define('UPLOADS', 'http://192.240.118.114/divinos/framework/storage/uploads/');
-  define('DEFAULT_IMG_USER', 'http://192.240.118.114/divinos/assets/img/default-avatar.png');
-  define('DEFAULT_NO_PHOTO', 'http://192.240.118.114/divinos/assets/img/no_photo.png');
+  define('UPLOADS', 'http://rep.fox3.com.br/divinos/framework/storage/uploads/');
+  define('DEFAULT_IMG_USER', 'http://rep.fox3.com.br/divinos/assets/img/default-avatar.png');
+  define('DEFAULT_NO_PHOTO', 'http://rep.fox3.com.br/divinos/assets/img/no_photo.png');
 }
 
 // // DB Config
