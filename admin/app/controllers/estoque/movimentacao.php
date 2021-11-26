@@ -6,6 +6,9 @@ class ControllerEstoqueMovimentacao extends BaseController {
   public function index($data) {
 
     $data['action_movimentacao'] = $this->url->link('estoque/movimentacao/add');
+    $data['url_upload_file'] = $this->url->link('estoque/movimentacao/upload_file');
+    $data['url_delete_file'] = $this->url->link('estoque/movimentacao/delete_file');
+
     $data['categorias_produtos'] = $this->get_list();
     return $this->load->view('estoque/movimentacao', $data);
   }
@@ -81,6 +84,34 @@ class ControllerEstoqueMovimentacao extends BaseController {
       $movimentacao['obj'] = json_encode($movimentacao['obj']);
       $movimentacao['produtos'] = json_encode($movimentacao['produtos']);
 
+      $nota_fiscal = array();
+
+      if (isset($this->request->post['imagem']) && is_array($this->request->post['imagem']) && sizeof($this->request->post['imagem']) > 0) {
+        foreach ($this->request->post['imagem'] as $img) {
+          $img_name = uniqid();
+          if (strpos($img, ';base64,') !== false) {
+            $web_capture_part = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $web_capture_part[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($web_capture_part[1]);
+            $img_name = $img_name . '.png';
+            $file = UPLOADS_DIR . 'nota_fiscal/' . $img_name;
+            file_put_contents($file, $image_base64);  
+          } else if (strpos($img, '.pdf') !== false) {
+            $img_name = $img_name . '.pdf';
+            $temp_file = UPLOADS_DIR . 'temp/' . $img;
+            if (file_exists($temp_file)) {
+              rename($temp_file, UPLOADS_DIR . 'nota_fiscal/' . $img_name);
+            }
+          }
+          $nota_fiscal[] = $img_name;
+        }
+      }
+
+      if (sizeof($nota_fiscal) > 0) {
+        $movimentacao['nota_fiscal'] = json_encode($nota_fiscal);
+      }
+
       $movimentacao = $this->model_estoque_movimentacao->add($movimentacao);
       
       
@@ -90,6 +121,32 @@ class ControllerEstoqueMovimentacao extends BaseController {
       
       $this->session->data['success'] = array('key' => 'add_movimentacao');
       $this->response->json(array('error' => false));
+    }
+  }
+
+  public function upload_file() {
+    $path_upload = UPLOADS_DIR . 'temp/';
+    if(isset($this->request->files['file']) && isset($this->request->files['file']['name']) && $this->request->files['file']['name'] != null) {
+      $ext_file = strtolower(pathinfo($this->request->files['file']['name'], PATHINFO_EXTENSION));
+      $img_name = 'temp_nota_fiscal_' . uniqid() . '.' . $ext_file;
+      if (move_uploaded_file($this->request->files['file']['tmp_name'], $path_upload . $img_name)) {
+        $this->response->json(array('error' => false, 'file' => $img_name));
+        // $this->func->compressImage($path_upload . $img_name, $path_upload . 'compressed/' . $img_name, 75);
+      }
+    }
+  }
+
+  public function delete_file() {
+    if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+      if (isset($this->request->post['file']) && $this->request->post['file'] !== '') {
+        $file = $this->request->post['file'];
+        if (file_exists(UPLOADS_DIR . 'temp/' . $file)) {
+          unlink(UPLOADS_DIR . 'temp/' . $file);
+          $this->response->json(array('error' => false));
+        } else {
+          $this->response->json(array('error' => true, 'msg' => 'Arquivo não encontrado'));
+        }
+      }
     }
   }
 }

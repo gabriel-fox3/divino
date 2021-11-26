@@ -149,3 +149,36 @@ table.dataTable>thead .sorting:after, table.dataTable>thead .sorting:before, tab
   padding: 0.5rem 1.5rem;
   color: #a9acb3;
 }
+
+/* BTN ICON */
+.btn-icon {
+  width: max-content;
+  padding: 0;
+  border: 0;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  transition: linear .15s;
+}
+
+.btn-icon span {
+  font-size: 13px;
+  padding: 0 15px;
+}
+
+.btn-icon.btn-sm span {
+  font-size: 10px;
+}
+
+.btn-icon i {
+  display: inline-block;
+  padding: 12px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 0;
+  font-size: 18px;
+}
+
+.btn-icon.btn-sm i {
+  font-size: 13px;
+}

@@ -7,9 +7,11 @@ class ControllerEstoqueHome extends BaseController {
 
     $this->document->setTitle('Estoque');
     $this->document->addStyle('css/styles/estoque');
+    $this->document->addStyle('css/styles/movimentacao');
 
     $this->document->addStyle('js/plugins/iconpicker/css/fontawesome-iconpicker');
     $this->document->addScript('js/plugins/iconpicker/js/fontawesome-iconpicker.min');
+    $this->document->addScript('js/plugins/webcam');
 
     $data['user_info'] = $this->session->data['user_info'];
     

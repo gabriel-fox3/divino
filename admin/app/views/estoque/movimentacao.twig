@@ -47,6 +47,45 @@
               <div class="tab-content">
               </div>
             </div>
+            <div class="form-group">
+              <label>Nota fiscal <small>(Opcional)</small></label>
+              <div class="d-flex">
+                <a href="javascript:;" class="btn btn-primary btn-sm btn-icon btn-abrir-camera">
+                  <i class="fas fa-camera"></i>
+                  <span>Camera</span>
+                </a>
+                <a href="javascript:;" class="btn btn-primary btn-sm btn-icon btn-escolher-arquivo ml-2">
+                  <i class="fas fa-paperclip"></i>
+                  <span>Enviar arquivo</span>
+                </a>
+              </div>
+
+              {# fazer quadradinho com camera e em baixo os arquivos, x no quadradinho pra fechar e alertar se tiver arquivos #}
+
+
+              <div class="upload_files mt-3">
+                <div class="take_photo text-center" style="display: none">
+                  <label>Tirar foto com a camera</label>
+                  <div id="camera" loaded="false" class="mx-auto"></div>
+                  <div class="mx-auto text-center mt-2 d-flex justify-content-center">
+                    <a href="javascript:;" class="btn btn-link btn-take-picture"><i class="fas fa-camera fa-2x"></i></a>
+                    <a href="javascript:;" style="display: none" class="btn btn-link btn-save"><i class="fas fa-check fa-2x"></i></a>
+                    <a href="javascript:;" style="display: none" class="btn btn-link btn-discard"><i class="fas fa-times fa-2x"></i></a>
+                  </div>
+                </div>
+
+                <div class="choose_file" style="display: none">
+                  <label class="d-block text-center">Enviar arquivo do computador</label>
+                  <div class="d-block text-center mt-2">
+                    <a href="javascript:;" class="btn btn-square btn-outline-info">Selecionar arquivos</a>
+                    <input type="file" class="d-none" name="tmp_imagens[]" multiple accept="image/png, image/jpeg, application/pdf, application/vnd.ms-excel">
+                  </div>
+                </div>
+              </div>
+
+              <div class="list_files mt-3">
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -60,10 +99,250 @@
 
 <script>
 
+  function setCam() {
+    let container = $('#form_movimentacao .upload_files');
+    let cam = container.find('#camera');
+    cam.attr('loaded', 'true');
+    cam.fadeIn();
+    Webcam.attach('#form_movimentacao #camera');
+  }
+
+  function removeCam() {
+    let container = $('#form_movimentacao .upload_files');
+    let cam = container.find('#camera');
+    cam.attr('loaded', 'false');
+    Webcam.reset();
+    cam.hide();
+  }
+
+  function setPreview(b64) {
+    let container = $('#form_movimentacao .upload_files .take_photo');
+    let cam = container.find('#camera');
+    let html = `
+      <div id="preview_camera">
+        <img src="${b64}" class="img-fluid">
+      </div>
+    `;
+    $(html).insertAfter(cam);
+
+    container.find('.btn-take-picture').fadeOut(300, function () {
+      container.find('.btn-save').fadeIn(300);
+      container.find('.btn-discard').fadeIn(300);
+    });
+  }
+
+  function removePreview() {
+    let container = $('#form_movimentacao .upload_files .take_photo');
+    let preview = container.find('#preview_camera');
+    preview.fadeOut(300, function () {
+      preview.remove();
+    });
+    container.find('.btn-discard').fadeOut(300);
+    container.find('.btn-save').fadeOut(300, function () {
+      container.find('.btn-take-picture').fadeIn(300);
+    });
+  }
+
+  function capture_web_snapshot() {
+    Webcam.snap( function(site_url) {
+      setPreview(site_url);
+      removeCam();
+    } );
+  }
+
+  async function previewUpload(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function() {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    });
+  }
+
+  async function uploadFile(file) {
+    return new Promise(function (resolve, reject) {
+      let formData = new FormData();
+      formData.append('file', file);
+
+      $.ajax({
+        url : '{{ url_upload_file }}',
+        type : 'POST',
+        data : formData,
+        processData: false, 
+        contentType: false, 
+        success : function(data) {
+          if (data.error == false) {
+            resolve(data.file);
+          } else {
+            reject(data);
+          }
+        }
+      });
+    });
+  }
+
+  async function deleteFile(file) {
+    return new Promise(function (resolve, reject) {
+      $.post('{{ url_delete_file }}', { file }, function (res) {
+        if (res.error == false) {
+          resolve(true);
+        } else {
+          Swal.fire('Erro ao excluir arquivo', res.msg, 'error');
+          resolve(false);
+        }
+      })
+    });
+  }
+
   $(document).ready(function () {
+
+    Webcam.set({
+      width: 290,
+      height: 290,
+      image_format: 'jpeg',
+      jpeg_quality: 90
+    });
 
     var f1 = $('#form_movimentacao');
     var b1 = f1.find('.btn[type="submit"]');
+
+    f1.find('.btn-abrir-camera').click(function () {
+      let cam = $('#camera');
+      if (cam.attr('loaded') == 'false') {
+        
+        setCam();
+        f1.find('.btn-take-picture').unbind('click');
+        f1.find('.btn-take-picture').click(function () {
+          capture_web_snapshot();
+        });
+
+        $('.take_photo').fadeIn(300);
+        $('.choose_file').fadeOut(300).attr('show', 'false');
+      } else {
+        removeCam();
+        f1.find('.btn-take-picture').unbind('click');
+        $('.take_photo').fadeOut(300);
+      }
+    });
+
+    f1.find('.btn-escolher-arquivo').click(function () {
+      let container = $('.choose_file');
+      if (container.attr('show') === 'true') {
+        container.fadeOut(300).attr('show', 'false');
+      } else {
+        removeCam();
+        f1.find('.btn-take-picture').unbind('click');
+        $('.take_photo').fadeOut(300, function () {
+          container.fadeIn(300);
+          container.attr('show', 'true');
+        });
+
+      }
+
+
+    });
+
+    f1.find('.upload_files .btn-save').click(function () {
+      
+      let preview = f1.find('#preview_camera');
+      let img = preview.find('img').attr('src');
+      let html = `
+        <div class="item">
+          <a href="javascript:;" class="delete"><i class="fas fa-trash text-danger"></i></a>
+          <input type="hidden" name="imagem[]" value="${img}">
+          <img src="${img}" class="img-fluid">
+        </div>
+      `;
+      
+      removePreview();
+      let el = $(html).appendTo(f1.find('.list_files'));
+      el.find('.delete').click(function () {
+        Swal.fire({
+          icon: 'question', 
+          title: 'Remover imagem',
+          text: 'Você tem certeza que deseja remover esta imagem?',
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não'
+        }).then(function (res) {
+          if (res.isConfirmed) {
+            el.fadeOut(300, function () {
+              el.remove();
+            })
+          }
+        })
+      });
+      setCam();
+    });
+
+    f1.find('.upload_files .btn-discard').click(function () {
+      removePreview();
+      setCam();
+
+    });
+
+    f1.find('.upload_files .choose_file a').click(function () {
+      let container = f1.find('.upload_files .choose_file');
+      container.find('input[type="file"]').click();
+    })
+
+    f1.find('.upload_files .choose_file input[type="file"]').change(async function (event) {
+      $.each(event.target.files, async function (index, el) {
+        let ext = el.name.split('.');
+        ext = ext[ext.length - 1];
+        console.log(ext);
+        let img_extensions = ['png', 'jpg', 'jpeg'];
+
+        let img = ''; let tipo = 'imagem'; let input = '';
+        let file = null;
+        if ($.inArray(ext, img_extensions) >= 0) {
+          img = await previewUpload(el);
+          input = `<input type="hidden" name="imagem[]" value="${img}">`;
+          img = `<img src="${img}" class="img-fluid">`;
+        } else {
+          tipo = 'pdf';
+          img = '<i class="fad fa-file-pdf"></i>';
+          input = await uploadFile(el);
+          file = input;
+          input = `<input type="hidden" name="imagem[]" value="${input}">`;
+        }
+
+        let html = `
+          <div class="item">
+            <a href="javascript:;" class="delete"><i class="fas fa-trash text-danger"></i></a>
+            ${input}
+            ${img}
+          </div>
+        `;
+
+        let new_el = $(html).appendTo(f1.find('.list_files'));
+        new_el.find('.delete').click(function () {
+          Swal.fire({
+            icon: 'question', 
+            title: 'Remover ' + (tipo == 'imagem' ? 'imagem' : 'arquivo') + '',
+            text: 'Você tem certeza que deseja remover ' + (tipo == 'imagem' ? 'esta imagem' : 'este arquivo') + '?',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não'
+          }).then(async function (res) {
+            if (res.isConfirmed) {
+              let deleted = await deleteFile(file);
+              if (deleted) {
+                new_el.fadeOut(300, function () {
+                  new_el.remove();
+                })
+              }
+            }
+          })
+        });
+      });
+
+      $(this).val('');
+    });
+
 
     b1.click(function() {
       f1.ajaxForm({
