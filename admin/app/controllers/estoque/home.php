@@ -2,6 +2,8 @@
 
 namespace Mubbi;
 
+use DateTime;
+
 class ControllerEstoqueHome extends BaseController {
   public function index() {
 
@@ -17,6 +19,8 @@ class ControllerEstoqueHome extends BaseController {
     
     $data['default_img'] = DEFAULT_IMG_USER;
     $data['categorias'] = $this->getListCategorias();
+    $data['historico'] = $this->getHistoricoMovimentacao();
+    $data['historico'] = $this->load->view('estoque/list_movimentacao', $data);
 
     if (isset($this->request->get['idc']) && $this->request->get['idc'] !== '') {
       $this->session->data['last_id_categoria'] = $this->request->get['idc'];
@@ -47,6 +51,76 @@ class ControllerEstoqueHome extends BaseController {
     $data['footer'] = $this->load->controller('common/footer', $data);
 
     $this->response->setOutput($this->load->view('estoque/list', $data));
+  }
+
+  public function getHistoricoMovimentacao() {
+    $this->load->model('estoque/movimentacao');
+    $this->load->model('estoque/produto');
+    $historico = $this->model_estoque_movimentacao->getAll();
+    if (sizeof($historico) > 0) {
+      foreach($historico as $key => $movimentacao) {
+        $historico[$key]['joined'] = DateTime::createFromFormat('Y-m-d H:i:s', $movimentacao['joined'])->format('d/m/Y \à\s H:i:s');
+        $movimentacao['obj'] = json_decode($movimentacao['obj'], true);
+        $movimentacao['produtos'] = json_decode($movimentacao['produtos'], true);
+
+        $tipo = 'Entrada';
+        if ($movimentacao['lancar'] == 'saida') $tipo = 'Saída';
+
+        $produtos = array();
+        if (sizeof($movimentacao['produtos']) > 0) {
+          foreach($movimentacao['produtos'] as $idproduto) {
+            $produtos[$idproduto] = $this->model_estoque_produto->getById($idproduto);
+          }
+        }
+        
+        $historico[$key]['produtos'] = $produtos;
+
+        $color = $tipo == 'Entrada' ? 'success' : 'danger';
+
+        $info = array();
+        if (sizeof($movimentacao['obj']) > 0) {
+          foreach($movimentacao['obj'] as $i => $qnt) {
+            $p = $produtos[$i];
+            $medida = explode(',', $p['medida']);
+            $info[] = sprintf('%s do produto <strong>%s</strong>: <span class="text-%s">%s</span>', $tipo, $p['nome'], $color, $qnt . ' x ' . $medida[0]);
+          }
+        }
+        
+        $historico[$key]['obj'] = $movimentacao['obj'];
+        $historico[$key]['info'] = $info;
+        
+        // $info = sprintf('%s de %s %s do produto %s', $tipo, );
+
+        if ($movimentacao['nota_fiscal'] !== null && $movimentacao['nota_fiscal'] !== '') {
+          $movimentacao['nota_fiscal'] = json_decode($movimentacao['nota_fiscal'], true);
+          if (sizeof($movimentacao['nota_fiscal']) > 0) {
+            foreach($movimentacao['nota_fiscal'] as $i => $nota) {
+              if (is_array($nota)) {
+                $o = array();
+                if (isset($nota['preview'])) {
+                  $o['preview'] = UPLOADS . 'preview/' . $nota['preview'];
+                } else {
+                  $o['preview'] = '<i class="fad fa-file-pdf"></i>';
+                }
+
+                if (isset($nota['file'])) {
+                  $o['file'] = UPLOADS . 'nota_fiscal/' . $nota['file'];
+                }
+
+                $movimentacao['nota_fiscal'][$i] = $o;
+              } else {
+                $movimentacao['nota_fiscal'][$i] = UPLOADS . 'nota_fiscal/' . $nota;
+              }
+            }
+            $historico[$key]['nota_fiscal'] = $movimentacao['nota_fiscal'];
+          }
+          
+          
+        }
+      }
+    }
+    
+   return $historico;
   }
 
   public function getListCategorias() {

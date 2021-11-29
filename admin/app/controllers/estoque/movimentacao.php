@@ -10,6 +10,7 @@ class ControllerEstoqueMovimentacao extends BaseController {
     $data['url_delete_file'] = $this->url->link('estoque/movimentacao/delete_file');
 
     $data['categorias_produtos'] = $this->get_list();
+
     return $this->load->view('estoque/movimentacao', $data);
   }
 
@@ -97,14 +98,29 @@ class ControllerEstoqueMovimentacao extends BaseController {
             $img_name = $img_name . '.png';
             $file = UPLOADS_DIR . 'nota_fiscal/' . $img_name;
             file_put_contents($file, $image_base64);  
-          } else if (strpos($img, '.pdf') !== false) {
-            $img_name = $img_name . '.pdf';
-            $temp_file = UPLOADS_DIR . 'temp/' . $img;
-            if (file_exists($temp_file)) {
-              rename($temp_file, UPLOADS_DIR . 'nota_fiscal/' . $img_name);
+            $nota_fiscal[] = $img_name;
+          } else {
+            $obj = json_decode(str_replace("'", '"', $img), true);
+            $temp_nota = array();
+
+            if (isset($obj['file'])) {
+              $temp_file = UPLOADS_DIR . 'temp/' . $obj['file'];
+              if (file_exists($temp_file)) {
+                rename($temp_file, UPLOADS_DIR . 'nota_fiscal/' . $img_name . '.pdf');
+                $temp_nota['file'] = $img_name . '.pdf';
+              }
             }
+
+            if (isset($obj['preview'])) {
+              $temp_file = UPLOADS_DIR . 'preview/' . $obj['preview'];
+              if (file_exists($temp_file)) {
+                rename($temp_file, UPLOADS_DIR . 'preview/' . $img_name . '.jpg');
+                $temp_nota['preview'] = $img_name . '.jpg';
+              }
+            }
+
+            $nota_fiscal[] = $temp_nota;
           }
-          $nota_fiscal[] = $img_name;
         }
       }
 
@@ -130,7 +146,26 @@ class ControllerEstoqueMovimentacao extends BaseController {
       $ext_file = strtolower(pathinfo($this->request->files['file']['name'], PATHINFO_EXTENSION));
       $img_name = 'temp_nota_fiscal_' . uniqid() . '.' . $ext_file;
       if (move_uploaded_file($this->request->files['file']['tmp_name'], $path_upload . $img_name)) {
-        $this->response->json(array('error' => false, 'file' => $img_name));
+        $res = array();
+        try {
+          $preview = $this->func->generatePreviewPdf($path_upload . $img_name);
+          $res['preview'] = array(
+            'error' => false, 
+            'url' => UPLOADS . 'preview/' . $preview,
+            'file' => $preview
+          );
+        } catch (\Throwable $th) {
+          $res['preview'] = array(
+            'error' => true, 
+            'msg' => $th->getMessage()
+          );
+        }
+
+        $res['file'] = array(
+          'error' => false, 
+          'file' => $img_name
+        );
+        $this->response->json($res);
         // $this->func->compressImage($path_upload . $img_name, $path_upload . 'compressed/' . $img_name, 75);
       }
     }
@@ -140,6 +175,14 @@ class ControllerEstoqueMovimentacao extends BaseController {
     if ($this->request->server['REQUEST_METHOD'] == 'POST') {
       if (isset($this->request->post['file']) && $this->request->post['file'] !== '') {
         $file = $this->request->post['file'];
+        if (isset($this->request->post['preview']) && $this->request->post['preview'] == 1) {
+          $extension = pathinfo($file, PATHINFO_EXTENSION);
+          $file_preview = str_replace($extension, 'jpg', $file);
+
+          if (file_exists(UPLOADS_DIR . 'preview/' . $file_preview)) {
+            unlink(UPLOADS_DIR . 'preview/' . $file_preview);
+          }  
+        }
         if (file_exists(UPLOADS_DIR . 'temp/' . $file)) {
           unlink(UPLOADS_DIR . 'temp/' . $file);
           $this->response->json(array('error' => false));

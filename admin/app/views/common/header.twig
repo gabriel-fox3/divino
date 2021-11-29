@@ -18,6 +18,7 @@
   <link href="{{ assets }}node_modules/sweetalert2/dist/sweetalert2.css" rel="stylesheet">
 	<link href="{{ assets }}css/dark.css" rel="stylesheet">
   <link href="{{ assets }}node_modules/sweetalert2/dist/dark.css">
+  <link href="{{ assets }}css/side_modal.css" rel="stylesheet">
   <link href="{{ assets }}css/styles/custom.css" rel="stylesheet">
   <link href="{{ assets }}css/fontawesome_pro.css" rel="stylesheet">
 	<!-- <link href="{{ assets }}css/dark.css" rel="stylesheet"> -->
@@ -27,6 +28,8 @@
   <link href="{{ assets }}node_modules/summernote/summernote.css" rel="stylesheet">
 
   <link href="{{ assets }}node_modules/notyf/notyf.min.css" rel="stylesheet">
+
+  <link href="{{ assets }}css/jquery.fancybox.min.css" rel="stylesheet">
 
   {% if custom_styles is defined %}
     {% for style in custom_styles %}
@@ -59,6 +62,7 @@
   <script src="{{ assets }}js/beto.js"></script>
   <script src="{{ assets }}js/plugins/jquery.form.js"></script>
   <script src="{{ assets }}js/plugins/jquery.mask.min.js"></script>
+  <script src="{{ assets }}js/plugins/jquery.fancybox.min.js"></script>
 
   {% if custom_scripts is defined %}
     {% for script in custom_scripts %}

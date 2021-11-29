@@ -96,6 +96,23 @@
       }
     }
 
+    function generatePreviewPdf($file) {
+      $path = UPLOADS_DIR . 'preview/';
+      $name = explode('/', $file);
+      $name = end($name);
+      $name = explode('.', $name);
+      $name = $name[0] . '.jpg';
+      $im = new \Imagick($file . '[0]');
+      $im->setImageFormat('jpg');
+      $im->writeimage($path . $name);
+      $im->clear();
+      $im->destroy();
+      return $name;
+      // header('Content-Type: image/jpeg');
+      // echo $im;
+  
+    }
+
     public function getProduto($idproduto, $verify = true) {
 
       $this->load->model('arquivo/arquivo');

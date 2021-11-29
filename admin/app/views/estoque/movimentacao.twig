@@ -172,8 +172,8 @@
         processData: false, 
         contentType: false, 
         success : function(data) {
-          if (data.error == false) {
-            resolve(data.file);
+          if (data.file.error == false) {
+            resolve(data);
           } else {
             reject(data);
           }
@@ -182,9 +182,9 @@
     });
   }
 
-  async function deleteFile(file) {
+  async function deleteFile(file, preview = 0) {
     return new Promise(function (resolve, reject) {
-      $.post('{{ url_delete_file }}', { file }, function (res) {
+      $.post('{{ url_delete_file }}', { file, preview }, function (res) {
         if (res.error == false) {
           resolve(true);
         } else {
@@ -303,10 +303,26 @@
           img = `<img src="${img}" class="img-fluid">`;
         } else {
           tipo = 'pdf';
-          img = '<i class="fad fa-file-pdf"></i>';
           input = await uploadFile(el);
-          file = input;
-          input = `<input type="hidden" name="imagem[]" value="${input}">`;
+          
+          file = input.file.file;
+
+          let obj = {
+            file: file
+          };
+
+          if (input.preview.error == false) {
+            img = `<img src="${input.preview.url}" class="img-fluid">`;
+            obj.preview = input.preview.file;
+          } else {
+            img = '<i class="fad fa-file-pdf"></i>';
+          }
+
+          obj = JSON.stringify(obj);
+          console.log(obj);
+          obj = obj.replaceAll('"', "'");
+
+          input = `<input type="hidden" name="imagem[]" value="${obj}">`;
         }
 
         let html = `
@@ -329,8 +345,14 @@
             cancelButtonText: 'Não'
           }).then(async function (res) {
             if (res.isConfirmed) {
-              let deleted = await deleteFile(file);
-              if (deleted) {
+              let deleted = false;
+              if (tipo == 'pdf') {
+                deleted = await deleteFile(file, 1);
+              } else {
+                deleted = true;
+              }
+
+              if (deleted !== false) {
                 new_el.fadeOut(300, function () {
                   new_el.remove();
                 })
