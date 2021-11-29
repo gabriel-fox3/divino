@@ -76,13 +76,14 @@ class ControllerEstoqueHome extends BaseController {
         $historico[$key]['produtos'] = $produtos;
 
         $color = $tipo == 'Entrada' ? 'success' : 'danger';
+        $icon = $tipo == 'Entrada' ? '<i class="fas fa-arrow-down"></i>' : '<i class="fas fa-arrow-up"></i>';
 
         $info = array();
         if (sizeof($movimentacao['obj']) > 0) {
           foreach($movimentacao['obj'] as $i => $qnt) {
             $p = $produtos[$i];
             $medida = explode(',', $p['medida']);
-            $info[] = sprintf('%s do produto <strong>%s</strong>: <span class="text-%s">%s</span>', $tipo, $p['nome'], $color, $qnt . ' x ' . $medida[0]);
+            $info[] = sprintf('<span class="text-%s">%s</span> <strong>%s</strong>: <span>%s</span>', $color, $icon, $p['nome'], $qnt . ' x ' . $medida[0]);
           }
         }
         

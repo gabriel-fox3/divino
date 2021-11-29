@@ -91,6 +91,37 @@
   $(document).ready(function () {
     const container_historico = $('#historico');
 
+    var tabela = container_historico.find('table').DataTable({
+      language: {
+        processing: "Processando...",
+        search: "Buscar&nbsp;:",
+        lengthMenu: "Mostrar _MENU_ itens",
+        info: "Mostrando do item _START_ ao _END_ de _TOTAL_ itens no total",
+        infoEmpty: "Nenhum item para a busca",
+        infoFiltered: "(_MAX_ itens no total)",
+        infoPostFix: "",
+        loadingRecords: "Carregando...",
+        zeroRecords: "Nenhum item para a busca",
+        emptyTable: "Nenhum item para a busca",
+        paginate: {
+          first: "Primeira",
+          previous: "Anterior",
+          next: "Próxima",
+          last: "Última"
+        }
+        //aria: {
+        //sortAscending:  ": activer pour trier la colonne par ordre croissant",
+        //sortDescending: ": activer pour trier la colonne par ordre décroissant"
+        //}
+      },
+      initComplete: function () {
+        // $('#example_filter').hide();
+      }
+    });
+    tabela.on('draw', function () {
+      // events();
+    });
+
     container_historico.find('select[name="t[]"]').select2({
       placeholder: "Selecione"
     });
