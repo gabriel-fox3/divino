@@ -1,8 +1,8 @@
 <div id="historico">
   <h4>Histórico de movimentações</h4>
 
-  <form method="post">
-    <input type="hidden" name="func" value="filtro_historico">
+  <form method="get">
+    <input type="hidden" name="route" value="estoque/home">
     <div class="row justify-content-center mt-3">
       <div class="col-3">
         <div class="form-group m-0">
@@ -16,6 +16,24 @@
           <select class="form-control" name="t[]" multiple>
             <option value="entrada">Entrada</option>
             <option value="saida">Saída</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-group m-0">
+          <label>Produto</label>
+          <select class="form-control" name="p[]" multiple>
+            {% if categorias is defined %}
+              {% for cat in categorias %}
+                {% if cat.produtos is defined and cat.produtos|length > 0 %}
+                  <optgroup label="{{ cat.nome }}">
+                    {% for prod in cat.produtos %}
+                      <option value="{{ prod.idproduto }}">{{ prod.nome }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
           </select>
         </div>
       </div>
@@ -122,7 +140,7 @@
       // events();
     });
 
-    container_historico.find('select[name="t[]"]').select2({
+    container_historico.find('select[name="t[]"], select[name="p[]"]').select2({
       placeholder: "Selecione"
     });
 

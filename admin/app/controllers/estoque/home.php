@@ -19,9 +19,24 @@ class ControllerEstoqueHome extends BaseController {
     
     $data['default_img'] = DEFAULT_IMG_USER;
     $data['categorias'] = $this->getListCategorias();
-    $data['historico'] = $this->getHistoricoMovimentacao();
-    $data['historico'] = $this->load->view('estoque/list_movimentacao', $data);
 
+    $data['filtro_historico'] = array();
+    if (isset($this->request->get['d']) && $this->request->get['d'] !== '') {
+      $data['filtro_historico']['data'] = $this->request->get['d'];
+    }
+
+    if (isset($this->request->get['t']) && is_array($this->request->get['t']) && sizeof($this->request->get['t']) > 0) {
+      $data['filtro_historico']['tipo'] = $this->request->get['t'];
+    }
+
+    if (isset($this->request->get['p']) && is_array($this->request->get['p']) && sizeof($this->request->get['p']) > 0) {
+      $data['filtro_historico']['produto'] = $this->request->get['p'];
+    }
+
+    
+    $data['historico'] = $this->getHistoricoMovimentacao($data['filtro_historico']);
+    $data['historico'] = $this->load->view('estoque/list_movimentacao', $data);
+    
     if (isset($this->request->get['idc']) && $this->request->get['idc'] !== '') {
       $this->session->data['last_id_categoria'] = $this->request->get['idc'];
       $this->load->model('estoque/categoria_produto');
@@ -53,10 +68,10 @@ class ControllerEstoqueHome extends BaseController {
     $this->response->setOutput($this->load->view('estoque/list', $data));
   }
 
-  public function getHistoricoMovimentacao() {
+  public function getHistoricoMovimentacao($filtro = null) {
     $this->load->model('estoque/movimentacao');
     $this->load->model('estoque/produto');
-    $historico = $this->model_estoque_movimentacao->getAll();
+    $historico = $this->model_estoque_movimentacao->getAll($filtro);
     if (sizeof($historico) > 0) {
       foreach($historico as $key => $movimentacao) {
         $historico[$key]['joined'] = DateTime::createFromFormat('Y-m-d H:i:s', $movimentacao['joined'])->format('d/m/Y \à\s H:i:s');

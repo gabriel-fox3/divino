@@ -5,13 +5,34 @@ use DateTime;
 use Mubbi\BaseModel;
 
 class ModelEstoqueMovimentacao extends BaseModel{
-  public function getAll($ativos = false) {
+  public function getAll($filtro = null) {
     $w = array();
     $q = sprintf('SELECT * FROM movimentacao');
+
+    if ($filtro !== null) {
+      if (isset($filtro['data']) && $filtro['data'] !== '') {
+        $w[] = "joined LIKE '" . $filtro['data'] . "%'";
+      }
+      if (isset($filtro['tipo']) && is_array($filtro['tipo']) && sizeof($filtro['tipo']) > 0) {
+        $tmp = array();
+        foreach ($filtro['tipo'] as $tipo) {
+          $tmp[] = "lancar = '$tipo'";
+        }
+        $w[] = '(' . implode(' OR ', $tmp) . ')';
+      }
+      if (isset($filtro['produto']) && is_array($filtro['produto']) && sizeof($filtro['produto']) > 0) {
+        $tmp = array();
+        foreach ($filtro['produto'] as $idproduto) {
+          $tmp[] = "produtos LIKE '%\"$idproduto\"%'";
+        }
+        $w[] = '(' . implode(' OR ', $tmp) . ')';
+      }
+    }
 
     if (sizeof($w) > 0) {
       $q .= ' WHERE ' . implode(' AND ', $w);
     }
+    
     return $this->db->query($q)->rows;
   }
 
