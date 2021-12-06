@@ -2,8 +2,8 @@
 // App Config
 define('USE_TWIG', true);
 define('USE_SSL', false);
-define('HTTP_SERVER', 'http://localhost/live/divinos/');
-define('HTTPS_SERVER', 'https://localhost/live/divinos/');
+// define('HTTP_SERVER', 'http://localhost/live/divinos/');
+// define('HTTPS_SERVER', 'https://localhost/live/divinos/');
 // define('HTTP_SERVER', 'http://beto.fox3.com.br/_sites/divinos/');
 // define('HTTPS_SERVER', 'https://beto.fox3.com.br/_sites/divinos/');
 define('DEFAULT_IMG_USER', ASSETS . 'img/default-avatar.png');
