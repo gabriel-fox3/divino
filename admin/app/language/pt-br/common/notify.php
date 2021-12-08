@@ -42,3 +42,9 @@ $_['add_movimentacao'] = array(
   'text' => 'Movimentação lançada com sucesso',
   'title' => 'Lançar movimentação'
 );
+
+$_['add_evento'] = array(
+  'type' => 'success',
+  'text' => 'Evento adicionado com sucesso',
+  'title' => 'Criar evento'
+);

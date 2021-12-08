@@ -10252,12 +10252,12 @@ a.text-dark:hover {
   border-bottom-left-radius: 0.2rem;
   border: 1px solid #7f838e;
 }
-.alert-outline-coloured .alert-message:not(:nth-child(2)),
+/* .alert-outline-coloured .alert-message:not(:nth-child(2)),
 .alert-outline .alert-message:not(:nth-child(2)) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left: 0;
-}
+} */
 .alert-outline-coloured .alert-icon,
 .alert-outline .alert-icon {
   border-top-left-radius: 0.2rem;

@@ -2,9 +2,6 @@
 
 namespace Mubbi;
 
-/**
-* Default Controller
-*/
 class ControllerCommonHome extends BaseController {
   public function index() {
 

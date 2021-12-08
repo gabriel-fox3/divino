@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('America/Sao_Paulo');
+
 function _require_all($dir, $depth=0) {
 	$scan = glob("$dir/*");
 	foreach ($scan as $path) {

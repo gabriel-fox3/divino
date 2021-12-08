@@ -100,6 +100,15 @@ class ControllerCommonSidebar extends BaseController {
       'url' => $this->url->link('financeiro/home')
     );
 
+    $items[] = array(
+      'text' => $this->language->get('text_eventos'),
+      'icon' => '<i class="fas fa-star"></i>',
+      'active' => array(
+        'evento/home'
+      ),
+      'url' => $this->url->link('evento/home')
+    );
+
 
     // // Cronogramas
     // $cronogramas = array(

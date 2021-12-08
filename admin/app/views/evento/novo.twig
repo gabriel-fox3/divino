@@ -1,0 +1,127 @@
+<div id="container_novo_evento">
+  <!-- Modal -->
+  <div class="modal fade" id="modalAdicionarEvento" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form method="post" action="{{ action_add_evento }}">
+          <input type="hidden" name="iniciar" value="{{ iniciar }}">
+          <div class="modal-header">
+            <h5 class="modal-title">Adicionar evento</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label>Data de início evento <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" required name="data_inicio" value="{{ datas.inicio }}">
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label>Data de término evento <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" required name="data_final" value="{{ datas.final }}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label>Hora de início evento <span class="text-danger">*</span></label>
+                  <input type="time" class="form-control" required name="hora_inicio" value="{{ datas.hora_inicio }}">
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label>Hora de término evento <span class="text-danger">*</span> <small>previsão</small></label>
+                  <input type="time" class="form-control" required name="hora_final">
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <h5>Outras opções</h5>
+
+            <div class="form-group">
+              <label>Nome do evento</label>
+              <input type="text" class="form-control" name="nome">
+            </div>
+
+            <div class="form-group">
+              <label>Descrição do evento</label>
+              <textarea class="form-control" name="descricao"></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-12 my-auto">
+                <div class="custom-control custom-switch mr-3">
+                  <input type="checkbox" name="cobrar_entrada" value="1" class="custom-control-input" id="chk_cobrar_entrada">
+                  <label class="custom-control-label" for="chk_cobrar_entrada">Cobrar entrada</label>
+                </div>
+              </div>
+              <div class="col-4 mt-2 hide" style="display: none">
+                <div class="form-group">
+                  <label>Valor da entrada</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">R$</div>
+                    </div>
+                    <input type="text" class="form-control" name="valor_entrada">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Adicionar evento</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+    function incrementDate(dateInput,increment) {
+        var dateFormatTotime = new Date(dateInput);
+        var increasedDate = new Date(dateFormatTotime.getTime() +(increment *86400000));
+        return increasedDate;
+    }
+  
+    $(document).ready(function () {
+      const modalAdicionarEvento = $('#modalAdicionarEvento');
+
+      modalAdicionarEvento.find('[name="valor_entrada"]').mask('000.000.000.000.000,00', {reverse: true});
+
+      modalAdicionarEvento.find('#chk_cobrar_entrada').change(function () {
+        let row = $(this).closest('.row');
+        if ($(this).prop('checked') == true) {
+          row.find('.hide').fadeIn();
+        } else {
+          row.find('.hide').fadeOut();
+        }
+      });
+
+      modalAdicionarEvento.find('input[name="data_inicio"]').change(function () {
+        let d = $(this).val();
+        d = d + ' 00:00:00';
+        d = incrementDate(new Date(d), 1);
+        let dia = d.getDate();
+        dia = dia < 10 ? '0' + dia : dia;
+        let str = d.getFullYear() + '-' + d.getMonth() + '-' + dia;
+        console.log(str);
+        modalAdicionarEvento.find('input[name="data_final"]').val(str);
+      })
+    })
+  
+  </script>
+
+</div>
