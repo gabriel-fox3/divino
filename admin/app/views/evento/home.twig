@@ -19,7 +19,7 @@
               </div>
             </div>
             <div class="text-center mt-3">
-              <a href="#" class="btn-sm btn btn-outline-info text-uppercase btn-square">Finalizar evento</a>
+              <a href="javascript:;" data-id="{{ evento.idevento }}"  class="btn-sm btn btn-outline-info text-uppercase btn-square btn-finalizar-evento">Finalizar evento</a>
             </div>
 
 
@@ -106,6 +106,30 @@
   }
 
   $(document).ready(function () {
+    $('.btn-finalizar-evento').click(function () {
+      let idevento = $(this).attr('data-id');
+      Swal.fire({ 
+        title: 'Finalizar evento', 
+        icon: 'question', 
+        text: 'Você tem certeza que deseja finalizar este evento?', 
+        showCancelButton: true, 
+        confirmButtonText: `Sim`, 
+        cancelButtonText: `Cancelar`, 
+      }).then((result) => { 
+        if (result.isConfirmed) { 
+          $.post('{{ url_finalizar_evento }}', {
+            idevento
+          }, function (res) {
+            if (res.error == false) {
+              location.reload();
+            } else {
+              Swal.fire(res.msg.type, res.msg.title, res.msg.title);
+            }
+          })
+        } 
+      }); 
+    })
+
     $('.btn_novo_evento').click(function () {
       $.get('{{ url_novo_evento }}', { iniciar: true}, function (res) {
         let e = $(res.result).appendTo('#painel .main');

@@ -10,6 +10,8 @@ class ControllerEventoHome extends BaseController {
     $this->document->setTitle('Eventos');
 
     $data['url_novo_evento'] = $this->url->link('evento/home/novo');
+    $data['url_finalizar_evento'] = $this->url->link('evento/home/finalizar_evento');
+
     $this->document->addStyle('css/styles/evento');
 
     $data['evento'] = $this->get_list();
@@ -96,6 +98,26 @@ class ControllerEventoHome extends BaseController {
       
       $this->session->data['success'] = array('key' => 'add_evento');
       $this->response->redirect($this->url->link('evento/home'));
+    }
+  }
+
+  public function finalizar_evento() {
+    if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+      if (isset($this->request->post['idevento']) && $this->request->post['idevento'] !== '') {
+        $idevento = $this->request->post['idevento'];
+        $this->load->model('evento/evento');
+
+        $evento = $this->model_evento_evento->getById($idevento);
+        $evento['status'] = '2';
+
+        $evento = $this->model_evento_evento->save($evento);
+
+        $this->log->save('finalizar_evento', array(
+          'new' => serialize($evento)
+        ));
+        
+        $this->response->json(array('error' => false));
+      }
     }
   }
 }
