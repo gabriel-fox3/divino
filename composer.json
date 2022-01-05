@@ -11,7 +11,8 @@
     ],
     "require": {
         "twig/twig": "3.3.2",
-        "brick/money": "^0.5.3"
+        "brick/money": "^0.5.3",
+        "libern/qr-code-reader": "^1.0"
     },
     "autoload": {
     "psr-4": {

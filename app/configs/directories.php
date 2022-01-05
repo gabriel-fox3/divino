@@ -8,8 +8,8 @@ define('LANGUAGE', 'app/language/');
 define('ASSETS', 'assets/');
 define('MODELS', 'app/models/');
 define('SESSION', FRAMEWORK . 'storage/sess/');
-define('UPLOADS_DIR', '../framework/storage/uploads/');
-define('CACHE', '../framework/storage/cache_admin/');
+define('UPLOADS_DIR', 'framework/storage/uploads/');
+define('CACHE', 'framework/storage/cache_admin/');
 
 
 // echo "<pre>";

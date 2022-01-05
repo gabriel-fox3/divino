@@ -9,9 +9,14 @@ class ComposerStaticInit40d823617368319492b984a9779c1fe4
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '74f78b6b99713ff89d56028b614df71a' => __DIR__ . '/..' . '/libern/qr-code-reader/src/lib/common/customFunctions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'Z' => 
+        array (
+            'Zxing\\' => 6,
+        ),
         'T' => 
         array (
             'Twig\\' => 5,
@@ -25,6 +30,10 @@ class ComposerStaticInit40d823617368319492b984a9779c1fe4
         array (
             'Mubbi\\' => 6,
         ),
+        'L' => 
+        array (
+            'Libern\\QRCodeReader\\' => 20,
+        ),
         'B' => 
         array (
             'Brick\\Money\\' => 12,
@@ -33,6 +42,10 @@ class ComposerStaticInit40d823617368319492b984a9779c1fe4
     );
 
     public static $prefixDirsPsr4 = array (
+        'Zxing\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/libern/qr-code-reader/src/lib',
+        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
@@ -48,6 +61,10 @@ class ComposerStaticInit40d823617368319492b984a9779c1fe4
         'Mubbi\\' => 
         array (
             0 => __DIR__ . '/../..' . '/framework/system',
+        ),
+        'Libern\\QRCodeReader\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/libern/qr-code-reader/src',
         ),
         'Brick\\Money\\' => 
         array (

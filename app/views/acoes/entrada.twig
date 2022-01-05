@@ -1,0 +1,114 @@
+{{ header }}
+
+  <div class="card" id="lancar_entrada">
+    <div class="card-header">
+      <h5>Lançar entrada</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-4 mx-auto">
+          <div class="form-group text-center">
+            <label>Pulseira</label>
+            <div class="input-group">
+              <input type="text" class="form-control">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-outline-dark btn-abrir-camera"><i class="fas fa-camera"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="modalCamera" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Escanear pulseira</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div id="live_camera" class="mx-auto"></div>
+
+          <div class="mx-auto text-center mb-2">
+            <a href="javascript:;" class="btn btn-link btn-take-picture"><i class="fas fa-camera fa-2x"></i></a>
+          </div>
+          <input type="hidden" name="image" class="image-tag">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function capture_web_snapshot() {
+      Webcam.snap( function(b64) {
+        $(".image-tag").val(b64);
+
+        $('#live_camera').hide();
+        let html = `
+          <div id="preview_camera" class="text-center">
+            <img src="${b64}" class="img-fluid">
+          </div>
+        `;
+        $(html).insertAfter('#live_camera');
+
+        $.post('{{ url_check_image }}', { b64 }, function (res) {
+          console.log(res);
+        })
+
+        Webcam.reset();
+      });
+    }
+
+    $(document).ready(function () {
+      Webcam.set({
+        width: 290,
+        height: 290,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+      });
+
+      $('#modalCamera').on('hidden.bs.modal', function (event) {
+        Webcam.reset();
+      })
+
+      $('.btn-abrir-camera').click(function () {
+        let modal = $('#modalCamera');
+        let icon = modal.find('i');
+        Webcam.attach( '#live_camera' );
+        icon.removeClass('fa-times').addClass('fa-camera');
+        $('#preview_camera').remove();
+        $('#live_camera').show();
+
+        modal.modal('show');
+      });
+  
+      $('.btn-take-picture').click(function () {
+        let modal = $('#modalCamera');
+        let icon = modal.find('i');
+
+        if (icon.hasClass('fa-camera')) {
+          icon.removeClass('fa-camera').addClass('fa-times');
+          capture_web_snapshot();
+        } else {
+          Webcam.attach( '#live_camera' );
+          icon.removeClass('fa-times').addClass('fa-camera');
+          modal.find('#preview_camera').remove();
+          modal.find('#live_camera').show();
+
+        }
+      })
+    });
+  
+  
+  </script>
+
+{{ footer }}

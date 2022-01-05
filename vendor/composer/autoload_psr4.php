@@ -6,10 +6,12 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zxing\\' => array($vendorDir . '/libern/qr-code-reader/src/lib'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Mubbi\\' => array($baseDir . '/framework/system'),
+    'Libern\\QRCodeReader\\' => array($vendorDir . '/libern/qr-code-reader/src'),
     'Brick\\Money\\' => array($vendorDir . '/brick/money/src'),
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
 );
