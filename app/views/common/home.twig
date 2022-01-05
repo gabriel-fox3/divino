@@ -1,156 +1,94 @@
-  {{ header }}
+{{ header }}
+<div class="container-fluid p-0" id="container_evento">
 
-{% if home_departamentos is defined %}
-  <div class="container-fluid carouselHome">
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        {% set count = 0 %}
-        {% for departamento in home_departamentos %}
-          {% if departamento.produtos|length > 0 %}
-            {% set produto = departamento.produtos[0] %}
-            <div class="carousel-item {{ count == 0 ? 'active' : '' }}">
-              <div class="container">
-                <div class="row">
-                  <div class="col-12 col-md-6 py-4 py-md-0 my-md-auto animate__animated animate__pulse">
-                    {# <h4>{{ departamento.nome }}</h4> #}
-                    <h4 class="text-bold">{{ produto.produto.marca }}</h4>
-                    {% set nome = produto.produto.nome|split(' ') %}
-                    {% set f_nome = nome[0] %}
-                    <h1><span class="txt-bordo">{{ f_nome }}</span> <br> 
-                      {% if nome|length > 1 %}
-                        {% set nome = nome|unset(0) %}
-                        {{ nome|join(' ') }}
-                      {% else %}  
-                        {% for str in nome %}
-                          {% if str != f_nome %}
-                            {{ str }} <br>
-                          {% endif %}
-                        {% endfor %}  
-                      {% endif %}
-                    </h1>
-                    <p>{{ produto.blocos.descricao.conteudo|split('.')[0] }}</p>
-                    <a href="index.php?route=sobre/produtos/view&id={{ produto.produto.idproduto }}" class="btn btn-confira">Confira</a>
-                  </div>
-                  <div class="col-12 col-md-6 py-4 py-md-0 my-md-auto">
-                    {% if produto.imagens is defined and produto.imagens|length > 0 %}
-                      <img src="{{ produto.imagens[0]['arquivo']|get_upload_link() }}" class="img-fluid animate__animated animate__backInRight" alt="Arium Mini">
-                    {% endif %}
-                  </div>
-                </div>
+  {% if evento is defined and evento|length > 0 %}
+    <div class="row">
+      <div class="col-6 mx-auto">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="text-center mb-3">{{ evento.nome }}</h4>
+            <div class="info-evento">
+              <div>
+                <span>0</span>
+                <small>pessoas no evento</small>
+              </div>
+              <div>
+                <span><small>R$</small> 0,00</span>
+                <small>valor arrecadado</small>
               </div>
             </div>
-            {% set count = count + 1 %}
-          {% endif %}
-        {% endfor %}
-      </div>
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
-        <span class="sr-only">Next</span>
-      </a>
-    </div>
-  </div>
-{% endif %}
+            {# <div class="text-center mt-3">
+              <a href="javascript:;" data-id="{{ evento.idevento }}"  class="btn-sm btn btn-outline-info text-uppercase btn-square btn-finalizar-evento">Finalizar evento</a>
+            </div> #}
 
-  <div class="container-fluid orcamento" style="background-image: url(assets/img/home/orcamento.jpg);">
-    <div class="container">
-      <div class="row">
-        <div class="my-auto col-12 col-md-8">
-          <h2 class="mb-0"><strong>Solicite</strong> seu orçamento agora mesmo</h2>
+
+          </div>
+          <div class="card-footer bg-light py-1 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-clock mr-2"></i>
+              <div id="txt"></div>
+            </div>
+            <div>
+              <small class="text-uppercase">Final previsto do evento</small> 
+              {{ evento.final[1]|datetime('H:i:s', 'H:i') }}
+            </div>
+          </div>
+
         </div>
-        <div class="my-auto col-12 col-md-4 text-center pt-4 pt-md-0">
-          <a href="index.php?route=sobre/orcamento" class="btn">Clique aqui</a>
+      </div>
+
+      <div class="col-12 mt-5">
+        <div class="botoes">
+          <a href="#" class="btn"><i class="fas fa-users"></i>Entrada</a>
+          <a href="#" class="btn"><i class="fas fa-chair"></i>Mesas</a>
+          <a href="#" class="btn"><i class="fas fa-receipt"></i>Pedido</a>
+          <a href="#" class="btn"><i class="fas fa-dollar-sign"></i>Contas</a>
         </div>
       </div>
     </div>
-  </div>
-
-  {% if home_representadas is defined %}
-    <div class="container-fluid representadas">
-      <div class="container">
-        <h2>nossas representadas</h2>
-        <h5 class="my-5 text-center">As maiores empresas de equipamentos. Conheça agora!</h5>
-
-        <div class="row justify-content-center">
-          {% for pagina in home_representadas.sub %}
-          {% if pagina.arquivos.logo is defined %}
-            <div class="col-10 col-md-4">
-              <div class="flip-card">
-                <div class="flip-card-inner">
-                  <div class="flip-card-front">
-                    <img src="{{ pagina.arquivos.logo.arquivo|get_upload_link() }}" alt="{{ pagina.nome }}">
-                  </div>
-                  <div class="flip-card-back" style="background-image: url('{{ pagina.arquivos.logo.arquivo|get_upload_link() }}');">
-                    <div class="filter">
-                      {% if pagina.blocos.info is defined %}
-                        {{ pagina.blocos.info.conteudo }}
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <a href="index.php?route=sobre/representadas&r={{ pagina.idpagina }}" class="btn btn-flip-card hvr-bounce-to-right mt-2">Detalhes</a>
-              <h6>{{ pagina.nome }}</h6>
-            </div>
-            
-          {% endif %}
-          {% endfor %}
+  {% else %}
+    <div class="alert alert-primary alert-outline" role="alert">
+      <div class="alert-message">
+        <h4 class="alert-heading">Nenhum evento em andamento!</h4>
+        <p>Os eventos são necessários para que a aplicação de consumo consiga operar.</p>
+        <hr>
+        <div class="btn-list">
+          <button class="btn btn-success btn_novo_evento" type="button">Iniciar evento</button>
+          <button class="btn btn-info" type="button">Configurar eventos programados</button>
         </div>
       </div>
     </div>
   {% endif %}
 
+</div>
 
-{% if home_departamentos is defined %}
-  <div class="container servicos">
-    <div class="row">
-      {% set count = 0 %}
-      {% for departamento in home_departamentos %}
-        {% if count < 2 %}
-          <div class="col-12 col-md-6 mb-4 mb-md-0">
-            <div class="card-servico" style="background-image: url('{{ departamento.imagem }}');">
-              <div class="conteudo">
-                <h4 class="text-uppercase">{{ departamento.nome }}</h4>
-                <p>Confira nossa linha completa de {{ departamento.nome }}.</p>
-              </div>
-              <a href="index.php?route=sobre/produtos&d={{ departamento.iddepartamento }}" class="btn btn-servico hvr-pulse-grow"><i class="fas fa-chevron-right"></i></a>
-            </div>
-          </div>
-          {% set count = count + 1 %}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-{% endif %}
+<script>
 
-{% if home_empresa is defined and home_empresa.blocos.home is defined %}
-  <div class="container my-5">
-    <div class="row">
-      <div class="col-12">
-        <div class="aempresa container">
-          
-          <div class="row">
-            <div class="col-9 col-md-7 p-5" style="position: relative;">
-              <label>A EMPRESA</label>
-              <h3>MULTIBIO</h3>
-              {{ home_empresa.blocos.home.conteudo }}
-              <a href="index.php?route=sobre/quem_somos" class="btn btn-saiba-mais hvr-icon-wobble-horizontal">Saiba mais<i class="fas fa-chevron-right ml-3 "></i></a>
-            </div>
-            <div class="col-3 col-md-5 img" style="background-image: url(assets/img/home/aempresa.jpg);"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endif %}
+  function startTime() {
+    const today = new Date();
+    let h = today.getHours();
+    let m = today.getMinutes();
+    let s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =  h + ":" + m + ":" + s;
+    setTimeout(startTime, 1000);
+  }
 
-  {{ footer }}
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+  }
 
+</script>
 
+{% if evento is defined and evento|length > 0 %}
+  <script>
+     $(document).ready(function () {
+        startTime();
+     });
   </script>
-  
-</body>
-</html>
+{% endif %}
+
+
+{{ footer }}

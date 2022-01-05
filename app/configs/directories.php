@@ -8,4 +8,14 @@ define('LANGUAGE', 'app/language/');
 define('ASSETS', 'assets/');
 define('MODELS', 'app/models/');
 define('SESSION', FRAMEWORK . 'storage/sess/');
-define('UPLOADS', FRAMEWORK . 'storage/uploads/');
+define('UPLOADS_DIR', '../framework/storage/uploads/');
+define('CACHE', '../framework/storage/cache_admin/');
+
+
+// echo "<pre>";
+
+// echo dirname('storage');
+// exit;
+
+// echo "</pre>";
+

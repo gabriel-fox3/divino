@@ -1,0 +1,101 @@
+#financeiro .resumo .card {
+  border-bottom: 5px solid
+}
+
+#financeiro .resumo .card .icon {
+  width: 40px;
+  height: 40px;
+  font-size: 35px;
+  margin-right: 15px;
+}
+
+#financeiro .resumo .card-success {
+  border-color: var(--success);
+}
+
+#financeiro .resumo .card-success .icon i {
+  color: var(--success);
+}
+
+#financeiro .resumo .card-danger {
+  border-color: var(--danger);
+}
+
+#financeiro .resumo .card-danger .icon i {
+  color: var(--danger);
+}
+
+#financeiro .resumo .card-info {
+  border-color: var(--info);
+}
+
+#financeiro .resumo .card-info .icon i {
+  color: var(--info);
+}
+
+#modalAddEntrada .entradas_personalizadas .list,
+#modalAddSaida .saidas_personalizadas .list {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item,
+#modalAddSaida .saidas_personalizadas .list .item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item:nth-last-child(2),
+#modalAddSaida .saidas_personalizadas .list .item:nth-last-child(2),
+#modalAddEntrada .entradas_personalizadas .list .item.novo,
+#modalAddSaida .saidas_personalizadas .list .item.novo {
+  border: 0;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item > div span,
+#modalAddSaida .saidas_personalizadas .list .item > div span {
+  font-weight: 900;
+  font-size: 14px;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item > div p,
+#modalAddSaida .saidas_personalizadas .list .item > div p {
+  margin: 0;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item.novo,
+#modalAddSaida .saidas_personalizadas .list .item.novo {
+  background: #ddd;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs,
+#modalAddSaida .saidas_personalizadas .list .item.novo .inputs {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs input,
+#modalAddSaida .saidas_personalizadas .list .item.novo .inputs input {
+  background-color: #fff;
+  border-color: #fff;
+  margin-right: 5px;
+}
+
+#modalAddEntrada .entradas_personalizadas .list .item.novo .inputs .input-group,
+#modalAddSaida .saidas_personalizadas .list .item.novo .inputs .input-group {
+  width: 40%;
+}
+
+
+#modalDetalhes .list-group-item {
+  background-color: #d7d7d7;
+  border-color: #d7d7d7;
+}

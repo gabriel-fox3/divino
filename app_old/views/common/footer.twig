@@ -1,0 +1,152 @@
+<footer>
+  <div class="container-fluid footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-4 pb-4 pb-md-0 text-center text-md-left">
+          <img src="assets/img/footer/logo-white.png" alt="" class="img-fluid mb-3" style="max-width: 130px">
+          <p>© 2021 MultiBio Soluções Laboratoriais.<br>
+            Todos os direitos reservados.</p>
+        </div>
+        {% if footer_representadas is defined %}
+          <div class="col-12 col-md-4 pb-4 pb-md-0 text-center text-md-left">
+            <h4>Representadas</h4>
+
+            <div class="representadas mt-4">
+              {% for item in footer_representadas.sub %}
+                <a href="index.php?route=sobre/representadas&r={{ item.idpagina }}">{{ item.nome }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        <div class="col-12 col-md-4 pb-4 pb-md-0 text-center text-md-left">
+          <h4>Acompanhe-nos</h4>
+          {% if footer_itens is defined %}
+            {% if footer_itens.links is defined %}
+              {% for link in footer_itens.links %}
+                {% if link.url != '' and link.icon != '' %}
+                  <a href="{{ link.url }}" class="redes" target="_blank">{{ link.icon|decode_html() }}</a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {% if footer_itens.footer is defined %}
+              <div class="about">
+                {% if footer_itens.footer.end is defined and footer_itens.footer.end != '' %}
+                  <span>
+                    <i class="fas fa-map-marker"></i>
+                    {{ footer_itens.footer.end }}
+                  </span>
+                {% endif %}
+                {% if footer_itens.footer.mail is defined and footer_itens.footer.mail != '' %}
+                  <span>
+                    <i class="far fa-envelope"></i>
+                    {{ footer_itens.footer.mail }}
+                  </span>
+                {% endif %}
+                {% if footer_itens.footer.tel is defined and footer_itens.footer.tel != '' %}
+                  <span>
+                    <i class="fas fa-phone-alt"></i>
+                    {{ footer_itens.footer.tel }}
+                  </span>
+                {% endif %}
+                
+              </div>
+            {% endif %}
+            
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid fox text-center py-2">
+    <a href="https://www.foxthree.com.br" target="_blank"><img src="assets/img/footer/logo-fox-bordo.png" alt="FoxThree" style="max-width: 60px;"></a>
+  </div>
+</footer>
+<script src="https://kit.fontawesome.com/d55f1e4280.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="{{ assets }}node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ assets }}js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="{{ assets }}js/bootstrap-select.min.js"></script>
+<script src="{{ assets }}js/jquery.visible.js"></script>
+<script src="{{ assets }}js/fox.scrollList.js"></script>
+<script src="{{ assets }}js/app.js"></script>
+<script src="{{ assets }}js/api/grupfy.js"></script>
+<script src="{{ assets }}js/paginga.jquery.js"></script>
+
+
+<script>
+
+  function animations() {
+    $('.animate__onVisible').each(function (index, element) {
+      let c = $(element).attr('data-anim');
+      if ($(element).visible(true) === true) {
+        if (!$(element).hasClass('animate__animated')) {
+          console.log(c);
+          $(element).addClass('animate__animated');
+          $(element).addClass(c).css('opacity', '1');
+          console.log($(element));
+        }
+      } else {
+        $(element).removeClass(c).removeClass('animate__animated').css('opacity', '0');
+      }
+    });
+
+
+    // $('.produtos_bg').fadeIn(200);
+    // $(".produtos_bg").css({visibility:"visible", opacity: 0.0}).animate({opacity: 1.0},200);
+    // var produtos = $( ".produtos_bg" );
+    // $(produtos).each(function (index, element) {
+    //   if ($(element).visible(true) && $(element).css('opacity') == '0') {
+    //     console.log($(element));
+    //     $(element).animate({
+    //       opacity: 1,
+    //       // left: "+=50",
+    //       // height: "200"
+    //     }, 500, function() {
+    //       // Animation complete.
+    //     });
+    //   }
+    // });
+
+    // var garantia = $( ".garantia_qualidade" );
+    // $(garantia).each(function (index, element) {
+    //   if ($(element).visible(true) && $(element).css('opacity') == '0') {
+    //     console.log($(element));
+    //     $(element).animate({
+    //       opacity: 1,
+    //       // left: "+=50",
+    //       // height: "200"
+    //     }, 2000, function() {
+    //       // Animation complete.
+    //     });
+    //   }
+    // });
+
+
+    // var embalagens = $( ".peca_embalagens" );
+    // $(embalagens).each(function (index, element) {
+    //   if ($(element).visible(true) && $(element).css('opacity') == '0') {
+    //     console.log($(element));
+    //     $(element).animate({
+    //       opacity: 1,
+    //       // left: "+=50",
+    //       // height: "200"
+    //     }, 1000, function() {
+    //       // Animation complete.
+    //     });
+    //   }
+    // });
+  }
+  
+
+
+  $(document).ready(function () {
+    animations();
+    
+  });
+
+  $(document).scroll(function () { 
+    animations();
+  });
+</script>

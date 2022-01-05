@@ -1,0 +1,28 @@
+#container_evento .botoes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#container_evento .botoes .btn {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid var(--dark);
+  color: var(--dark);
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-right: 15px;
+  transition: .2s ease-in-out;
+}
+
+#container_evento .botoes .btn:hover {
+  transform: scale(1.1);
+}
+
+#container_evento .botoes .btn i {
+  font-size: 40px;
+}

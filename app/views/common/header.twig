@@ -1,133 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Bootstrap 5 Admin &amp; Dashboard Template">
+	<meta name="author" content="Bootlab">
 
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+	<title>{{ heading_title }}</title>
 
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+	<link rel="canonical" href="https://appstack.bootlab.io/pages-sign-in.html" />
+	<link rel="shortcut icon" href="img/favicon.ico">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="{{ assets }}node_modules/sweetalert2/dist/sweetalert2.css" rel="stylesheet">
+	<link href="{{ assets }}css/dark.css" rel="stylesheet">
+  <link href="{{ assets }}node_modules/sweetalert2/dist/dark.css">
+  <link href="{{ assets }}css/side_modal.css" rel="stylesheet">
+  <link href="{{ assets }}css/styles/custom.css" rel="stylesheet">
+  <link href="{{ assets }}css/fontawesome_pro.css" rel="stylesheet">
+	<!-- <link href="{{ assets }}css/dark.css" rel="stylesheet"> -->
+  <link class="js-stylesheet" href="{{ assets }}css/styles/custom.css" rel="stylesheet">
+	
+  <!-- SUMMERNOTE -->
+  <link href="{{ assets }}node_modules/summernote/summernote.css" rel="stylesheet">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="{{ assets }}node_modules/notyf/notyf.min.css" rel="stylesheet">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="{{ assets }}node_modules/bootstrap/dist/css/bootstrap.min.css">
-
-  <!-- PERFECT SCROLLBAR -->
-  <link rel="stylesheet" href="{{ assets }}node_modules/perfect-scrollbar/css/perfect-scrollbar.css">
-
-  <!-- FANCYBOX -->
-  <link rel="stylesheet" href="{{ assets }}css/jquery.fancybox.min.css">
-
-  <!-- ADOBE FONTS -->
-  <link rel="stylesheet" href="https://use.typekit.net/ote8boj.css">
-
-  <!-- ANIMATE -->
-  <link rel="stylesheet" href="{{ assets }}css/animate.min.css">
-  <link rel="stylesheet" href="{{ assets }}css/animations.css">
-
-  <link rel="stylesheet" href="{{ assets }}webfonts/Fontawesome/fontawesome.css">
-
-  <link rel="stylesheet" href="{{ assets }}node_modules/nouislider/distribute/nouislider.css" >
-  <link rel="stylesheet" href="{{ assets }}css/style.css">
-  <link rel="stylesheet" href="{{ assets }}css/hover.css">
-  <link rel="stylesheet" href="{{ assets }}css/app.css">
-
-  <title>{{ heading_title }}</title>
-
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+  <link href="{{ assets }}css/jquery.fancybox.min.css" rel="stylesheet">
 
   {% if custom_styles is defined %}
     {% for style in custom_styles %}
-      <link rel="stylesheet" href="{{ assets }}css/{{ style }}.css">
+      {% set source = assets %}
+      
+      {% if 'PARENT::' in style %}
+        {% set style = style|trim('PARENT::') %}
+        {% set source = source|replace({'/admin': ''}) %}
+      {% endif %}
+      
+      <link rel="stylesheet" href="{{ source }}{{ style }}.css">
     {% endfor %}
   {% endif %}
+
+</head>
+
+  {# HOW TO USE: 
+  data-theme: default (default), dark, light
+  data-layout: fluid (default), boxed
+  data-sidebar-position: left (default), right
+  data-sidebar-behavior: sticky (default), fixed, compact #}
+
+<body data-theme="dark" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="compact">
+
+  <script src="{{ assets }}/js/app.js"></script>
+  {# <script src="{{ assets }}js/core/settings.js"></script> #}
+  <script src="{{ assets }}node_modules/summernote/summernote.js"></script>
+  <script src="{{ assets }}node_modules/notyf/notyf.min.js"></script>
+  <script src="{{ assets }}node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+  <script src="{{ assets }}js/beto.js"></script>
+  <script src="{{ assets }}js/plugins/jquery.form.js"></script>
+  <script src="{{ assets }}js/plugins/jquery.mask.min.js"></script>
+  <script src="{{ assets }}js/plugins/jquery.fancybox.min.js"></script>
 
   {% if custom_scripts is defined %}
     {% for script in custom_scripts %}
-      <script src="{{ assets }}js/{{ script }}.js"></script>
+      <script src="{{ assets }}{{ script }}.js"></script>
     {% endfor %}
   {% endif %}
-</head>
-<body>
 
+  <script>
+    const beto = Beto;
+  </script>
 
-  <header>
-    <div class="container-fluid">
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="index.php"><img src="assets/img/header/logo-multibio.png" alt="Logo Multibio" style="max-width: 100px;"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mx-auto text-center">
-            <li class="nav-item {{ route == 'common/home' ? 'active' : '' }}">
-              <a class="nav-link" href="index.php">Home </a>
-            </li>
-            <li class="nav-item {{ route == 'sobre/quem_somos' ? 'active' : '' }}">
-              <a class="nav-link" href="index.php?route=sobre/quem_somos">Empresa</a>
-            </li>
-            {% if header_representadas is defined %}
-              <li class="dropdown nav-item {{ route == 'sobre/representadas' ? 'active' : '' }}">
-                <a class="btn nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Representadas
-                </a>
-              
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  {% for item in header_representadas.sub %}
-                    <a class="dropdown-item text-center text-uppercase w-100" href="index.php?route=sobre/representadas&r={{ item.idpagina }}">{{ item.nome }}</a>
-                  {% endfor %}
-                </div>
-              </li>
-            {% endif %}
-            {% if header_departamentos is defined %}
-              <li class="dropdown nav-item {{ route == 'sobre/produtos' or route == 'sobre/produtos/view' ? 'active' : '' }}">
-                <a class="btn nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Produtos
-                </a>
-              
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  {% for departamento in header_departamentos %}
-                    <a class="dropdown-item text-center text-uppercase w-100" href="index.php?route=sobre/produtos&d={{ departamento.iddepartamento }}">{{ departamento.nome }}</a>
-                  {% endfor %}
-                </div>
-              </li>
-            {% endif %}
-            <li class="nav-item {{ route == 'sobre/orcamento' ? 'active' : '' }}">
-              <a class="nav-link" href="index.php?route=sobre/orcamento">Orçamento</a>
-            </li>
-            <li class="nav-item {{ route == 'sobre/contato' ? 'active' : '' }}">
-              <a class="nav-link" href="index.php?route=sobre/contato">Contato</a>
-            </li>
-            <li class="nav-item {{ route == 'blog/noticias' or route == 'blog/noticias/view' ? 'active' : '' }}">
-              <a class="nav-link" href="index.php?route=blog/noticias">Blog</a>
-            </li>
-            {% if header_phone is defined and header_phone != null %}
-              <li class="nav-item">
-                <a href="#" class="btn-phone d-block d-md-none">{{ header_phone }} <span class="ml-2"><i class="fas fa-phone"></i></span></a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
+  {% if login_page == true %}
+  <div class="main d-flex justify-content-center w-100">
+  {% else %}
+  <div class="wrapper" id="painel">
+    {{ sidebar }}
+    
+    <div class="main">
+      {{ navbar }}
+      <main class="content">
 
-        {% if header_phone is defined and header_phone != null %}
-          <a href="#" class="ml-auto btn-phone d-none d-md-block">{{ header_phone }} <span class="ml-2"><i class="fas fa-phone"></i></span></a>
-        {% endif %}
-      </nav>
-    </div>
-  </header>
+  {% endif %}
